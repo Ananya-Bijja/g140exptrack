@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 
 const WebcamCapture = () => {
@@ -6,10 +7,10 @@ const WebcamCapture = () => {
 
   const uploadImage = async (imageBlob) => {
     const formData = new FormData();
-    formData.append('image', imageBlob, 'webcam_image.jpg');
+    formData.append('file', imageBlob, 'webcam_image.jpg'); // Ensure 'image' matches the server
 
     try {
-      const uploadResponse = await fetch('http://localhost:5001/upload', {
+      const uploadResponse = await fetch('http://localhost:5000/upload', {
         method: 'POST',
         body: formData,
       });
@@ -31,13 +32,7 @@ const WebcamCapture = () => {
       canvas.width = videoRef.current.videoWidth;
       canvas.height = videoRef.current.videoHeight;
       const context = canvas.getContext('2d');
-      context.drawImage(
-        videoRef.current,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
+      context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 
       canvas.toBlob(
         (blob) => {
@@ -85,4 +80,5 @@ const WebcamCapture = () => {
   );
 };
 
-export default WebcamCapture;
+export default WebcamCapture; 
+

@@ -81,4 +81,3 @@ const WebcamCapture = () => {
 };
 
 export default WebcamCapture; 
-

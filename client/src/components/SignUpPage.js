@@ -1,6 +1,6 @@
-// SignUpPage.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import { useNavigate } from 'react-router-dom';
+
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
@@ -11,14 +11,15 @@ const SignUpPage = () => {
   });
 
   const [error, setError] = useState('');
-  const navigate = useNavigate(); // Use navigate for redirection after sign up
+  const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const { username, email, password, confirmPassword } = formData;
 
@@ -35,18 +36,35 @@ const SignUpPage = () => {
 
     setError(''); // Clear previous errors
 
-    // Here you would typically handle sign-up logic with API call
-    console.log('SignUp form submitted:', formData);
+    try {
+      // Send form data to backend to register the user
+      const response = await fetch('http://localhost:5000/api/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, email, password }), // Sending user details
+      });
 
-    // Redirect to Word Puzzle Game after successful sign-up
-    navigate('/word-puzzle');
+      const data = await response.json();
+
+      if (response.ok) {
+        // On success, redirect to another page or show success message
+        setSuccess('User created successfully!');
+        
+      } else {
+        setError(data.message || 'Failed to sign up');
+      }
+    } catch (error) {
+      setError('An error occurred during sign up');
+    }
   };
-
   return (
     <div className="signup-container">
       <h1>Sign Up</h1>
       <form onSubmit={handleSubmit} className="signup-form">
         {error && <p className="error">{error}</p>}
+        {success && <p className="success">{success}</p>}
 
         <label htmlFor="username">Username:</label>
         <input

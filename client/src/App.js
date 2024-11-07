@@ -38,13 +38,13 @@ const App = () => {
 
         {/* Detailed Analysis Route */}
         <Route 
-          path="/detailed-analysis/:username" 
+          path="/detailed-analysis/:username/:sessionId" 
           element={isLoggedIn ? <DetailedAnalysis username={loggedInUsername} /> : <Login onLogin={handleLogin} />} 
         />
 
         {/* Detailed Images Route */}
         <Route 
-          path="/detailed-images" 
+          path="/detailed-images/:username/:sessionId" 
           element={isLoggedIn ? <DetailedImages username={loggedInUsername} /> : <Login onLogin={handleLogin} />} 
         />
 

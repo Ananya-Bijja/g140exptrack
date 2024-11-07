@@ -157,12 +157,13 @@ app.get('/api/users', async (req, res) => {
 // Fetch game sessions for a specific user
 app.get('/api/game-sessions/:userId', async (req, res) => {
   const { userId } = req.params;
-
+  console.log('Received request for userId:', userId);
   try {
     // Find the user and populate the emotionAnalysis field to include game sessions
     const user = await User.findById(userId).select('emotionAnalysis'); // Assuming 'emotionAnalysis' contains the sessions
-
+    console.log('Fetched user:', user);
     if (!user) {
+      console.log('User not found');
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -310,10 +311,6 @@ app.post('/api/analyze/:sessionId', async (req, res) => {
     res.status(500).json({ message: 'Error analyzing session', error: error.message });
   }
 });
-
-
-
- 
 /*
 // Analyze images in a game session
 app.post('/api/analyze/:sessionId', async (req, res) => {
@@ -393,7 +390,6 @@ console.log('Hugging Face API result:', result);
   }
 }*/
 
-
 async function analyzeImage(imagePath) {
   try {
     const data = fs.createReadStream(imagePath);
@@ -426,10 +422,6 @@ async function analyzeImage(imagePath) {
     throw error;
   }
 }
-
-
-
-// Route to trigger image analysis and update MongoDB with results
 app.post('/analyze/:id', async (req, res) => {
   try {
     // Find the user by their image ID
@@ -458,7 +450,6 @@ app.post('/analyze/:id', async (req, res) => {
     res.status(500).json({ message: 'Error analyzing image', error: error.message });
   }
 });
-// Route to fetch detailed analysis data
 /*
 app.get('/api/analysis-summary', async (req, res) => {
   try {
@@ -526,7 +517,6 @@ app.get('/api/analysis-summary', async (req, res) => {
     res.status(500).json({ message: 'Error fetching analysis summary', error: err.message });
   }
 });*/
-
 
 /*
 app.get('/api/analysis-summary', async (req, res) => {
@@ -647,9 +637,16 @@ app.get('/api/analysis-summary', async (req, res) => {
 });
 
 */
+/*
+app.get('/api/analysis-summary:sessionId', async (req, res) => {
+  const { sessionId } = req.params;
+  const { username } = req.body;
+
+  if (!username || !sessionId) {
+    return res.status(400).json({ message: 'Username and sessionId are required' });
+  }
 
 
-app.get('/api/analysis-summary', async (req, res) => {
   try {
     // Fetch users and extract their emotionAnalysis data
     const users = await User.find({}, 'emotionAnalysis').lean();
@@ -687,6 +684,105 @@ app.get('/api/analysis-summary', async (req, res) => {
     res.status(500).json({ message: 'Error fetching analysis summary', error: err.message });
   }
 });
+*/
+
+
+
+
+/*
+app.get('/api/analysis-summary/:sessionId', async (req, res) => {
+  const { sessionId } = req.params;  // Get sessionId from the route params
+  const { username } = req.body;    // Get username from the request body
+
+
+  console.log(sessionId)
+  if (!username || !sessionId) {
+    return res.status(400).json({ message: 'Username and sessionId are required' });
+  }
+
+  try {
+    // Fetch users and extract their emotionAnalysis data
+    const users = await User.find({}, 'emotionAnalysis').lean();
+    
+    // Initialize an object to store emotion score totals (for summary)
+    const emotionSummary = {};
+
+    // Loop through users and their emotion analysis sessions
+    users.forEach(user => {
+      user.emotionAnalysis.forEach(session => {
+        // Check if the sessionId matches the requested sessionId
+        if (session.gameSessionId === sessionId) {
+          session.images.forEach(image => {
+            if (image.emotions) {
+              image.emotions.forEach(emotion => {
+                const emotionLabel = emotion.label;
+                const emotionScore = emotion.score;
+
+                // Accumulate the scores for each emotion label
+                emotionSummary[emotionLabel] = (emotionSummary[emotionLabel] || 0) + emotionScore;
+              });
+            }
+          });
+        }
+      });
+    });
+
+    // Send the aggregated emotion summary as the response
+    res.status(200).json(emotionSummary);
+  } catch (err) {
+    console.error('Error fetching analysis summary:', err);
+    res.status(500).json({ message: 'Error fetching analysis summary', error: err.message });
+  }
+});*/
+
+
+
+
+app.post('/api/analysis-summary/:sessionId', async (req, res) => {
+  const { sessionId } = req.params;  // Extract sessionId from URL parameters
+  const { username } = req.body;    // Extract username from the body of the request (if needed for validation)
+
+  console.log(`Session ID: ${sessionId}, Username: ${username}`);
+
+  if (!sessionId||!username) {
+    return res.status(400).json({ message: 'Session ID is required' });
+  }
+
+  try {
+    // Fetch all users and their emotion analysis data
+    const users = await User.find({}, 'emotionAnalysis').lean();
+
+    // Initialize an object to store emotion score totals (for summary)
+    const emotionSummary = {};
+
+    // Loop through each user and their emotion analysis sessions
+    users.forEach(user => {
+      user.emotionAnalysis.forEach(session => {
+        // Check if the sessionId matches the requested sessionId
+        if (session.gameSessionId === sessionId) {
+          session.images.forEach(image => {
+            if (image.emotions) {
+              image.emotions.forEach(emotion => {
+                const emotionLabel = emotion.label;
+                const emotionScore = emotion.score;
+
+                // Accumulate the scores for each emotion label
+                emotionSummary[emotionLabel] = (emotionSummary[emotionLabel] || 0) + emotionScore;
+              });
+            }
+          });
+        }
+      });
+    });
+
+    // Send the aggregated emotion summary as the response
+    res.status(200).json(emotionSummary);
+  } catch (err) {
+    console.error('Error fetching analysis summary:', err);
+    res.status(500).json({ message: 'Error fetching analysis summary', error: err.message });
+  }
+});
+
 
 
 /*
@@ -795,10 +891,11 @@ app.get('/api/detailed-analysis', async (req, res) => {
 });
 
 */
-
-app.get('/api/detailed-analysis', async (req, res) => {
+/*
+app.get('/api/detailed-analysis/:sessionId', async (req, res) => {
   try {
     // Fetch all users with their emotion analysis data
+    const{sessionId}=req.params;
     const users = await User.find({}, 'username emotionAnalysis').lean();
     
     // Process each user's emotion analysis data
@@ -806,14 +903,14 @@ app.get('/api/detailed-analysis', async (req, res) => {
       users.map(async (user) => {
         const sessions = await Promise.all(
           user.emotionAnalysis.map(async (session) => {
-            let imageCount = 0;
+            if (session.gameSessionId === sessionId) {
 
             // Process each image from the session and use existing emotion data
             const imagesWithEmotions = session.images.map((image) => {
               const imagePath = image.imageUrl; // Assuming the file path is stored in 'filePath'
               const emotions = image.emotions || {}; // Use stored emotions from MongoDB
 
-              imageCount++;
+              
 
               return {
                 imagePath,
@@ -825,13 +922,13 @@ app.get('/api/detailed-analysis', async (req, res) => {
             return {
               gameSessionId: session.gameSessionId,
               imagesWithEmotions,
-              imageCount,
-              capturedAt: session.images[0]?.capturedAt || null,
+              
             };
+          }
           })
         );
 
-        return { username: user.username, sessions };
+        return { username: user.username, sessions:sessions.filter(Boolean) };
       })
     );
 
@@ -839,6 +936,52 @@ app.get('/api/detailed-analysis', async (req, res) => {
     res.status(200).json(detailedAnalysis);
   } catch (error) {
     console.error('Error in detailed analysis:', error);
+    res.status(500).json({ message: 'Error in detailed analysis', error: error.message });
+  }
+});
+*/
+
+
+app.get('/api/detailed-analysis/:sessionId', async (req, res) => {
+  const { sessionId } = req.params;  // Extract sessionId from URL
+
+  try {
+    // Fetch all users with their emotion analysis data
+    const users = await User.find({}, 'username emotionAnalysis').lean();
+
+    // Filter sessions based on the requested sessionId
+    const detailedAnalysis = await Promise.all(
+      users.map(async (user) => {
+        const sessions = user.emotionAnalysis.filter(session => session.gameSessionId === sessionId);
+
+        // Process each session's images and emotions
+        const sessionsWithImages = await Promise.all(
+          sessions.map(async (session) => {
+            const imagesWithEmotions = session.images.map((image) => {
+              const imagePath = image.imageUrl;
+              const emotions = image.emotions || {};  // Use stored emotions
+
+              return {
+                imagePath,
+                emotions,
+                capturedAt: image.capturedAt || null,
+              };
+            });
+
+            return {
+              gameSessionId: session.gameSessionId,
+              imagesWithEmotions,
+            };
+          })
+        );
+
+        return { username: user.username, sessions: sessionsWithImages };
+      })
+    );
+
+    res.status(200).json(detailedAnalysis);
+  } catch (error) {
+    console.error('Error fetching detailed analysis:', error);
     res.status(500).json({ message: 'Error in detailed analysis', error: error.message });
   }
 });

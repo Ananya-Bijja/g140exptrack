@@ -1,113 +1,130 @@
 /* General styling */
-body {
-    font-family: Arial, sans-serif;
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-image: url('../../public/assets/images/Screenshot (122).png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Keeps the background fixed as you scroll */
+}
 
-    background-position: center;
-    background-size: cover;
-    margin: 0;
-  }
-  
-  .app {
-    text-align: center;
-    width: 100%;
-  }
-  
-  /* Splash Screen */
-  #splashScreen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    color: white;
-    text-align: center;
-  }
-  #splashScreen h1 {
-    font-size: 36px;
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  #splashScreen button {
-    padding: 10px 20px;
-    font-size: 18px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: #4caf50;
-    color: white;
-  }
-  
-  #splashScreen button:hover {
-    background-color: #45a049;
-  }
-  
-  /* Game Container */
-  #gameContainer {
-    background-color: #fff;
-    padding: 5px;
-    border-radius: 2px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  #puzzleImage {
-    max-width: 100%;
-    margin-top: 20px;
-  }
-  
-  #puzzle {
-    display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-gap: 10px;
-    justify-content: center;
-    margin-top: 20px;
-  }
-  
-  .cell {
-    width: 100px;
-    height: 100px;
-    background-color: #e0e0e0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    transition: background-color 0.3s;
-  }
-  
-  .cell.selected {
-    background-color: yellow;
-  }
-  
-  .cell.found {
-    background-color: green;
-    color: white;
-  }
-  
-  .cell.wrong {
-    background-color: red;
-    color: white;
-  }
-  
-  #message {
-    margin-top: 20px;
-    font-size: 18px;
-    color: #4caf50;
-  }
-  
-  button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: #4caf50;
-    color: white;
-  }
-  
-  button:hover {
-    background-color: #45a049;
-  }
+.app {
+  min-height: 100vh; /* Ensures content spans at least the full viewport height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Splash Screen */
+#splashScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: white;
+  text-align: center;
+}
+
+#splashScreen h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+#splashScreen button {
+  padding: 10px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #4caf50;
+  color: white;
+}
+
+#splashScreen button:hover {
+  background-color: #45a049;
+}
+
+/* Game Container */
+#gameContainer {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 90%;
+  margin: 20px auto; /* Adds spacing for scrolling */
+}
+
+/* Puzzle Image */
+#puzzleImage {
+  max-width: 100%;
+  margin-top: 20px;
+}
+
+/* Puzzle Grid */
+#puzzle {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Puzzle Cells */
+.cell {
+  width: 100px;
+  height: 100px;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  transition: background-color 0.3s;
+}
+
+.cell.selected {
+  background-color: yellow;
+}
+
+.cell.found {
+  background-color: green;
+  color: white;
+}
+
+.cell.wrong {
+  background-color: red;
+  color: white;
+}
+
+#message {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #4caf50;
+}
+
+/* Buttons */
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #4caf50;
+  color: white;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
   

@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { v4: uuidv4 } = require('uuid'); // Import uuid for unique ID generation
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -20,18 +20,6 @@ mongoose.connect('mongodb+srv://ananya_ansh:Ananya%40123%24@cluster0.3p1q6.mongo
   console.error('Error connecting to MongoDB:', err);
 });
 
-// Define schema for image emotion analysis data within a game session
-/*const imageSchema = new mongoose.Schema({
-  imageUrl: { type: String, required: true },
-  emotions: {
-    happy: { type: Number, default: 0 },
-    sad: { type: Number, default: 0 },
-    angry: { type: Number, default: 0 },
-    surprised: { type: Number, default: 0 },
-    neutral: { type: Number, default: 0 },
-  },
-  capturedAt: { type: Date, default: Date.now },
-});*/
 
 const imageSchema = new mongoose.Schema({
   imageUrl: { type: String, required: true },
@@ -40,6 +28,7 @@ const imageSchema = new mongoose.Schema({
     score: { type: Number, required: true }
   }],
   capturedAt: { type: Date, default: Date.now },
+  
 });
 
 
@@ -47,6 +36,7 @@ const imageSchema = new mongoose.Schema({
 const gameSessionSchema = new mongoose.Schema({
   gameSessionId: { type: String, required: true },
   images: [imageSchema],
+  flag:{type: Boolean,default:false,required: true}
 });
 
 // Define main User schema without images, uploadDate, and analysisResult fields
@@ -75,10 +65,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Helper function to generate a unique game session ID
-function generateGameSessionId() {
-  return uuidv4(); // Generate a unique ID using uuid
-}
+
 
 // Signup route
 app.post('/api/signup', async (req, res) => {
@@ -161,7 +148,7 @@ app.get('/api/game-sessions/:userId', async (req, res) => {
   try {
     // Find the user and populate the emotionAnalysis field to include game sessions
     const user = await User.findById(userId).select('emotionAnalysis'); // Assuming 'emotionAnalysis' contains the sessions
-    console.log('Fetched user:', user);
+    
     if (!user) {
       console.log('User not found');
       return res.status(404).json({ message: 'User not found' });
@@ -208,10 +195,7 @@ app.post('/api/create-game-session', async (req, res) => {
   }
 });
 
-// Example function to generate a unique game session ID
-const generateUniqueGameSessionId = () => {
-  return 'game-' + Date.now(); // Simple example; consider a better strategy for uniqueness
-};
+
 app.post('/upload', upload.single('file'), async (req, res) => {
   const { username, gameSessionId } = req.body;
   // Validate request body
@@ -244,7 +228,7 @@ if (sessionIndex === -1) {
   user.emotionAnalysis.push({ gameSessionId, images: [] });
   await user.save(); // Save the user with the new session
 
-  console.log('New game session created:', gameSessionId);
+ 
 }
 
 // Now you can push the new image to the existing or newly created session
@@ -285,11 +269,11 @@ app.post('/api/analyze/:sessionId', async (req, res) => {
 
     const analysisResults = await Promise.all(session.images.map(async (image) => {
       const imagePath = path.join(uploadDir, image.imageUrl);
-      console.log(`Analyzing image: ${imagePath}`);
+      
 
       try {
         const result = await analyzeImage(imagePath);
-        console.log(`Analysis result for image ${image.imageUrl}:`, result);
+        
         image.emotions = result.emotions;
         return image; // Ensure "emotions" array is included
       } catch (error) {
@@ -311,84 +295,6 @@ app.post('/api/analyze/:sessionId', async (req, res) => {
     res.status(500).json({ message: 'Error analyzing session', error: error.message });
   }
 });
-/*
-// Analyze images in a game session
-app.post('/api/analyze/:sessionId', async (req, res) => {
-
-  const { sessionId } = req.params;
-  const { username } = req.body; // Assuming you send username in the request body
-
-  if (!username || !sessionId) {
-    return res.status(400).json({ message: 'Username and sessionId are required' });
-  }
-
-  try {
-    const user = await User.findOne({ username, "emotionAnalysis.gameSessionId": sessionId });
-
-    if (!user) {
-      return res.status(404).json({ message: 'User or game session not found' });
-    }
-
-    // Find the images associated with the specified session
-    const session = user.emotionAnalysis.find(session => session.gameSessionId === sessionId);
-    const analysisResults = await Promise.all(session.images.map(async (image) => {
-      const imagePath = path.join(uploadDir, image.imageUrl);
-      const result = await analyzeImage(imagePath);
-      return { ...image, analysisResult: result }; // Include analysis result in the response
-    }));
-
-    res.status(200).json({ result: analysisResults });
-  } catch (error) {
-    console.error('Error analyzing session:', error);
-    res.status(500).json({ message: 'Error analyzing session', error: error.message });
-  }
-});
-*/
-
-/*
-// Helper function to analyze image using Hugging Face API
-async function analyzeImage(imagePath) {
-  try {
-    const data = fs.createReadStream(imagePath);
-    const { default: fetch } = await import('node-fetch');
-    const response = await fetch(
-      "https://api-inference.huggingface.co/models/trpakov/vit-face-expression",
-      {
-        headers: {
-          Authorization: "Bearer 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",
-          "Content-Type": "application/octet-stream",
-        },
-        method: "POST",
-        body: data,
-      }
-    );
-
-// Log the status and full response for debugging
-console.log(`Hugging Face API response status: ${response.status}`);
-if (!response.ok) {
-  const errorText = await response.text();
-  console.error(`Hugging Face API error: ${errorText}`);
-  throw new Error(`API error: ${response.statusText}`);
-}
-
-const result = await response.json();
-console.log('Hugging Face API result:', result);
-
-    // Map API response to fit your schema
-    const emotions = {
-      happy: result.happy || 0,
-      sad: result.sad || 0,
-      angry: result.angry || 0,
-      surprised: result.surprised || 0,
-      neutral: result.neutral || 0,
-    };
-
-    return emotions; // Return the emotions object directly
-  } catch (error) {
-    console.error("Error analyzing image:", error);
-    throw error;
-  }
-}*/
 
 async function analyzeImage(imagePath) {
   try {
@@ -422,524 +328,88 @@ async function analyzeImage(imagePath) {
     throw error;
   }
 }
-app.post('/analyze/:id', async (req, res) => {
-  try {
-    // Find the user by their image ID
-    const user = await User.findOne({ "emotionAnalysis.images._id": req.params.id });
-    
-    // Check if the user and image entry exist
-    if (!user) return res.status(404).json({ message: 'Image not found.' });
 
-    // Locate the specific image entry in the user's emotionAnalysis
-    const imageEntry = user.emotionAnalysis
-      .flatMap(session => session.images)
-      .find(image => image._id.toString() === req.params.id);
 
-    if (!imageEntry) return res.status(404).json({ message: 'Image not found.' });
-
-    // Analyze the image using the provided path
-    const result = await analyzeImage(path.join(uploadDir, imageEntry.imageUrl)); // Assuming imageUrl has the correct path
-
-    // Update analysis result in the image entry
-    imageEntry.analysisResult = result;
-    await user.save(); // Save the updated user document
-
-    res.status(200).json({ message: 'Analysis complete', result });
-  } catch (error) {
-    console.error('Error analyzing image:', error);
-    res.status(500).json({ message: 'Error analyzing image', error: error.message });
+// Utility function to perform emotion analysis
+async function showEmotionAnalysis(gameSessionId) {
+  const user = await User.findOne({ "emotionAnalysis.gameSessionId": gameSessionId });
+  if (!user) {
+      throw new Error('User not found');
   }
-});
-/*
-app.get('/api/analysis-summary', async (req, res) => {
-  try {
-    const users = await User.find({}, 'emotionAnalysis').lean();
-    
-    // Aggregate emotions counts across all users and sessions
-    const emotionCounts = {};
+  
+  const gameSession = user.emotionAnalysis.find(session => session.gameSessionId === gameSessionId);
+  if (!gameSession) {
+      throw new Error('Game session not found');
+  }
 
-    users.forEach(user => {
-      user.emotionAnalysis.forEach(session => {
-        session.images.forEach(image => {
-          if (image.emotions) {
-            image.emotions.forEach(emotion => {
-              if (emotionCounts[emotion]) {
-                emotionCounts[emotion] += 1;
-              } else {
-                emotionCounts[emotion] = 1;
-              }
-            });
+  if (!gameSession.flag) {  // If flag is false
+      // Perform the analysis
+      const analysisResult = await Promise.all(gameSession.images.map(async (image) => {
+          const imagePath = path.join('uploads', image.imageUrl);
+          try {
+              const result = await analyzeImage(imagePath);
+              image.emotions = result.emotions;
+              console.log("analysis aithundhi")
+              return image; 
+          } catch (error) {
+              image.emotions = [];
+              return image;
           }
-        });
-      });
-    });
+      }));
 
-    res.status(200).json(emotionCounts);
-  } catch (err) {
-    console.error('Error fetching analysis summary:', err);
-    res.status(500).json({ message: 'Error fetching analysis summary', error: err.message });
+      // Update the flag to true
+      gameSession.flag = true;
+      gameSession.images = analysisResult;
+      await user.save();  // Save the updated game session
+
+      return analysisResult;
+  } else {
+      // If flag is true, return previously analyzed results
+      console.log("unnadhi chupisthundhi");
+      return gameSession.images;
   }
-});
-*/
-
-/*
-
-app.get('/api/analysis-summary', async (req, res) => {
-  try {
-    // Fetch users and extract their emotionAnalysis data
-    const users = await User.find({}, 'emotionAnalysis').lean();
-    
-    // Initialize an object to store emotion counts
-    const emotionCounts = {};
-
-    // Loop through users and their emotion analysis sessions
-    users.forEach(user => {
-      user.emotionAnalysis.forEach(session => {
-        session.images.forEach(image => {
-          if (image.emotions) {
-            image.emotions.forEach(emotion => {
-              const emotionLabel = emotion.label;
-              if (emotionCounts[emotionLabel]) {
-                emotionCounts[emotionLabel] += 1; // Increment count if the emotion is already present
-              } else {
-                emotionCounts[emotionLabel] = 1; // Initialize count if the emotion is encountered for the first time
-              }
-            });
-          }
-        });
-      });
-    });
-    console.log(emotionCounts); // Log the counts for debugging
-    // Send the aggregated emotion counts as the response
-    res.status(200).json(emotionCounts);
-  } catch (err) {
-    console.error('Error fetching analysis summary:', err);
-    res.status(500).json({ message: 'Error fetching analysis summary', error: err.message });
-  }
-});*/
-
-/*
-app.get('/api/analysis-summary', async (req, res) => {
-  try {
-    // Fetch users and extract their emotionAnalysis data
-    const users = await User.find({}, 'emotionAnalysis').lean();
-    
-    // Initialize an object to store emotion counts
-    const emotionCounts = {};
-
-    // Loop through users and their emotion analysis sessions
-    users.forEach(user => {
-      user.emotionAnalysis.forEach(session => {
-        session.images.forEach(image => {
-          if (image.emotions) {
-            image.emotions.forEach(emotion => {
-              const emotionLabel = emotion.label;
-              if (emotionCounts[emotionLabel]) {
-                emotionCounts[emotionLabel] += 1; // Increment count if the emotion is already present
-              } else {
-                emotionCounts[emotionLabel] = 1; // Initialize count if the emotion is encountered for the first time
-              }
-            });
-          }
-        });
-      });
-    });
-
-    console.log(emotionCounts); // Log the counts for debugging
-
-    // Send the aggregated emotion counts as the response
-    res.status(200).json(emotionCounts);
-  } catch (err) {
-    console.error('Error fetching analysis summary:', err);
-    res.status(500).json({ message: 'Error fetching analysis summary', error: err.message });
-  }
-});
-*/
-
-/*
-app.get('/api/analysis-summary', async (req, res) => {
-  try {
-    // Fetch users and extract their emotionAnalysis data
-    const users = await User.find({}, 'emotionAnalysis').lean();
-    
-    // Initialize an object to store emotion counts
-    const emotionCounts = {};
-
-    // Loop through users and their emotion analysis sessions
-    users.forEach(user => {
-      user.emotionAnalysis.forEach(session => {
-        session.images.forEach(image => {
-          if (image.emotions) {
-            image.emotions.forEach(emotion => {
-              const emotionLabel = emotion.label;
-              // Increment the count for each emotion found in the image
-              if (emotionCounts[emotionLabel]) {
-                emotionCounts[emotionLabel] += 1; // Increment count if the emotion is already present
-              } else {
-                emotionCounts[emotionLabel] = 1; // Initialize count if the emotion is encountered for the first time
-              }
-            });
-          }
-        });
-      });
-    });
-    
-    console.log(emotionCounts); // Log the counts for debugging
-    // Send the aggregated emotion counts as the response
-    res.status(200).json(emotionCounts);
-  } catch (err) {
-    console.error('Error fetching analysis summary:', err);
-    res.status(500).json({ message: 'Error fetching analysis summary', error: err.message });
-  }
-});
-*/
-/*
-app.get('/api/analysis-summary', async (req, res) => {
-  try {
-    // Fetch users and extract their emotionAnalysis data
-    const users = await User.find({}, 'emotionAnalysis').lean();
-    
-    // Initialize an object to store emotion counts
-    const emotionCounts = {};
-
-    // Loop through users and their emotion analysis sessions
-    users.forEach(user => {
-      user.emotionAnalysis.forEach(session => {
-        session.images.forEach(image => {
-          if (image.emotions) {
-            image.emotions.forEach(emotion => {
-              const emotionLabel = emotion.label;
-              
-              // Log emotion data to verify what you're getting
-              console.log(`Processing emotion: ${emotionLabel} with score: ${emotion.score}`);
-              
-              // Increment the emotion count
-              if (emotionCounts[emotionLabel]) {
-                emotionCounts[emotionLabel] += 1;
-              } else {
-                emotionCounts[emotionLabel] = 1;
-              }
-            });
-          }
-        });
-      });
-    });
-
-    // Log the emotion counts object to see if it's accumulating properly
-    console.log('Final emotion counts:', emotionCounts);
-
-    // Send the aggregated emotion counts as the response
-    res.status(200).json(emotionCounts);
-  } catch (err) {
-    console.error('Error fetching analysis summary:', err);
-    res.status(500).json({ message: 'Error fetching analysis summary', error: err.message });
-  }
-});
-
-*/
-/*
-app.get('/api/analysis-summary:sessionId', async (req, res) => {
-  const { sessionId } = req.params;
-  const { username } = req.body;
-
-  if (!username || !sessionId) {
-    return res.status(400).json({ message: 'Username and sessionId are required' });
-  }
+}
 
 
-  try {
-    // Fetch users and extract their emotionAnalysis data
-    const users = await User.find({}, 'emotionAnalysis').lean();
-    
-    // Initialize an object to store emotion score totals (for summary)
-    const emotionSummary = {};
-
-    // Loop through users and their emotion analysis sessions
-    users.forEach(user => {
-      user.emotionAnalysis.forEach(session => {
-        session.images.forEach(image => {
-          if (image.emotions) {
-            image.emotions.forEach(emotion => {
-              const emotionLabel = emotion.label;
-              const emotionScore = emotion.score;
-
-              // Log emotion data to verify what's being processed
-              console.log(`Processing emotion: ${emotionLabel} with score: ${emotionScore}`);
-              
-              // Accumulate the scores for each emotion label
-              emotionSummary[emotionLabel] = (emotionSummary[emotionLabel] || 0) + emotionScore;
-            });
-          }
-        });
-      });
-    });
-
-    // Log the emotion summary to check the accumulated scores
-    console.log('Final emotion summary:', emotionSummary);
-
-    // Send the aggregated emotion summary as the response
-    res.status(200).json(emotionSummary);
-  } catch (err) {
-    console.error('Error fetching analysis summary:', err);
-    res.status(500).json({ message: 'Error fetching analysis summary', error: err.message });
-  }
-});
-*/
-
-
-
-
-/*
-app.get('/api/analysis-summary/:sessionId', async (req, res) => {
-  const { sessionId } = req.params;  // Get sessionId from the route params
-  const { username } = req.body;    // Get username from the request body
-
-
-  console.log(sessionId)
-  if (!username || !sessionId) {
-    return res.status(400).json({ message: 'Username and sessionId are required' });
-  }
-
-  try {
-    // Fetch users and extract their emotionAnalysis data
-    const users = await User.find({}, 'emotionAnalysis').lean();
-    
-    // Initialize an object to store emotion score totals (for summary)
-    const emotionSummary = {};
-
-    // Loop through users and their emotion analysis sessions
-    users.forEach(user => {
-      user.emotionAnalysis.forEach(session => {
-        // Check if the sessionId matches the requested sessionId
-        if (session.gameSessionId === sessionId) {
-          session.images.forEach(image => {
-            if (image.emotions) {
-              image.emotions.forEach(emotion => {
-                const emotionLabel = emotion.label;
-                const emotionScore = emotion.score;
-
-                // Accumulate the scores for each emotion label
-                emotionSummary[emotionLabel] = (emotionSummary[emotionLabel] || 0) + emotionScore;
-              });
-            }
-          });
-        }
-      });
-    });
-
-    // Send the aggregated emotion summary as the response
-    res.status(200).json(emotionSummary);
-  } catch (err) {
-    console.error('Error fetching analysis summary:', err);
-    res.status(500).json({ message: 'Error fetching analysis summary', error: err.message });
-  }
-});*/
-
-
-
-
+// Route to handle analysis summary
 app.post('/api/analysis-summary/:sessionId', async (req, res) => {
   const { sessionId } = req.params;  // Extract sessionId from URL parameters
   const { username } = req.body;    // Extract username from the body of the request (if needed for validation)
 
   console.log(`Session ID: ${sessionId}, Username: ${username}`);
 
-  if (!sessionId||!username) {
-    return res.status(400).json({ message: 'Session ID is required' });
+  if (!sessionId || !username) {
+    return res.status(400).json({ message: 'Session ID and Username are required' });
   }
 
   try {
-    // Fetch all users and their emotion analysis data
-    const users = await User.find({}, 'emotionAnalysis').lean();
+    // Step 1: Call the showEmotionAnalysis function to get analysis results (perform analysis if necessary)
+    const analysisResults = await showEmotionAnalysis(sessionId);
 
-    // Initialize an object to store emotion score totals (for summary)
+    // Step 2: Initialize an object to store emotion score totals (for summary)
     const emotionSummary = {};
 
-    // Loop through each user and their emotion analysis sessions
-    users.forEach(user => {
-      user.emotionAnalysis.forEach(session => {
-        // Check if the sessionId matches the requested sessionId
-        if (session.gameSessionId === sessionId) {
-          session.images.forEach(image => {
-            if (image.emotions) {
-              image.emotions.forEach(emotion => {
-                const emotionLabel = emotion.label;
-                const emotionScore = emotion.score;
+    // Step 3: Aggregate the emotion scores from the analyzed results
+    analysisResults.forEach(image => {
+      if (image.emotions) {
+        image.emotions.forEach(emotion => {
+          const emotionLabel = emotion.label;
+          const emotionScore = emotion.score;
 
-                // Accumulate the scores for each emotion label
-                emotionSummary[emotionLabel] = (emotionSummary[emotionLabel] || 0) + emotionScore;
-              });
-            }
-          });
-        }
-      });
+          // Accumulate the scores for each emotion label
+          emotionSummary[emotionLabel] = (emotionSummary[emotionLabel] || 0) + emotionScore;
+        });
+      }
     });
 
-    // Send the aggregated emotion summary as the response
+    // Step 4: Send the aggregated emotion summary as the response
     res.status(200).json(emotionSummary);
+
   } catch (err) {
     console.error('Error fetching analysis summary:', err);
     res.status(500).json({ message: 'Error fetching analysis summary', error: err.message });
   }
 });
-
-
-
-/*
-app.get('/api/detailed-analysis', async (req, res) => {
-  try {
-    const users = await User.find({}, 'username emotionAnalysis').lean();
-
-    const detailedAnalysis = await Promise.all(
-      users.map(async (user) => {
-        const sessions = await Promise.all(
-          user.emotionAnalysis.map(async (session) => {
-            const totalEmotions = {
-              happy: 0,
-              sad: 0,
-              angry: 0,
-              surprised: 0,
-              neutral: 0,
-            };
-            let imageCount = 0;
-
-            for (const image of session.images) {
-              const imagePath = image.filePath; // Adjust if your image data is stored differently
-
-              // Call the analyzeImage function for each image
-              const emotions = await analyzeImage(imagePath);
-
-              // Aggregate emotions for each image
-              totalEmotions.happy += emotions.happy;
-              totalEmotions.sad += emotions.sad;
-              totalEmotions.angry += emotions.angry;
-              totalEmotions.surprised += emotions.surprised;
-              totalEmotions.neutral += emotions.neutral;
-              imageCount++;
-            }
-
-            return {
-              gameSessionId: session.gameSessionId,
-              totalEmotions,
-              imageCount,
-              capturedAt: session.images[0]?.capturedAt || null,
-            };
-          })
-        );
-
-        return { username: user.username, sessions };
-      })
-    );
-
-    res.status(200).json(detailedAnalysis);
-  } catch (error) {
-    console.error('Error in detailed analysis:', error);
-    res.status(500).json({ message: 'Error in detailed analysis', error: error.message });
-  }
-});
-
-*/
-/*
-app.get('/api/detailed-analysis', async (req, res) => {
-  try {
-    const users = await User.find({}, 'username emotionAnalysis').lean();
-    
-    const detailedAnalysis = await Promise.all(
-      users.map(async (user) => {
-        const sessions = await Promise.all(
-          user.emotionAnalysis.map(async (session) => {
-            let imageCount = 0;
-            
-            // Process each image and its emotions dynamically
-            const imagesWithEmotions = await Promise.all(
-              session.images.map(async (image) => {
-                const imagePath = image.filePath; // Adjust if your image data is stored differently
-
-                // Assuming analyzeImage function returns an object with emotion labels as keys and scores as values
-                const emotions = await analyzeImage(imagePath);
-
-                // Return the image data and the dynamic emotion scores
-                imageCount++;
-
-                return {
-                  imagePath,
-                  emotions, // Use the dynamic emotions from analyzeImage
-                  capturedAt: image.capturedAt || null, // Use capturedAt timestamp if available
-                };
-              })
-            );
-            
-            
-            return {
-              gameSessionId: session.gameSessionId,
-              imagesWithEmotions,
-              imageCount,
-              capturedAt: session.images[0]?.capturedAt || null,
-            };
-          })
-        );
-
-        return { username: user.username, sessions };
-      })
-    );
-    console.log('Sending response:', detailedAnalysis);
-    res.status(200).json(detailedAnalysis);
-  } catch (error) {
-    console.error('Error in detailed analysis:', error);
-    res.status(500).json({ message: 'Error in detailed analysis', error: error.message });
-  }
-});
-
-*/
-/*
-app.get('/api/detailed-analysis/:sessionId', async (req, res) => {
-  try {
-    // Fetch all users with their emotion analysis data
-    const{sessionId}=req.params;
-    const users = await User.find({}, 'username emotionAnalysis').lean();
-    
-    // Process each user's emotion analysis data
-    const detailedAnalysis = await Promise.all(
-      users.map(async (user) => {
-        const sessions = await Promise.all(
-          user.emotionAnalysis.map(async (session) => {
-            if (session.gameSessionId === sessionId) {
-
-            // Process each image from the session and use existing emotion data
-            const imagesWithEmotions = session.images.map((image) => {
-              const imagePath = image.imageUrl; // Assuming the file path is stored in 'filePath'
-              const emotions = image.emotions || {}; // Use stored emotions from MongoDB
-
-              
-
-              return {
-                imagePath,
-                emotions, // Using the stored emotion data
-                capturedAt: image.capturedAt || null, // If 'capturedAt' exists, use it
-              };
-            });
-
-            return {
-              gameSessionId: session.gameSessionId,
-              imagesWithEmotions,
-              
-            };
-          }
-          })
-        );
-
-        return { username: user.username, sessions:sessions.filter(Boolean) };
-      })
-    );
-
-    console.log('Sending response:', detailedAnalysis);
-    res.status(200).json(detailedAnalysis);
-  } catch (error) {
-    console.error('Error in detailed analysis:', error);
-    res.status(500).json({ message: 'Error in detailed analysis', error: error.message });
-  }
-});
-*/
 
 
 app.get('/api/detailed-analysis/:sessionId', async (req, res) => {

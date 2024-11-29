@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from 'react';
+import React, { useState, useEffect,useRef , useCallback} from 'react';
 import { useLocation } from 'react-router-dom';
 import '../styles/style8.css';
 import WebcamCapture from './WebcamCapture';
@@ -33,8 +33,7 @@ let puzzles = [
   },
 ];
 
-// Array of positive affirmation messages for correct answers
-let affirmationMessages = [
+const affirmationMessages = [
   'Great job! You found the word!',
   'Excellent work!',
   'Well done!',
@@ -43,21 +42,12 @@ let affirmationMessages = [
 ];
 
 function WordPuzzleGame({ loggedInUsername }) {
-  let location = useLocation(); 
-  let gameSessionId = location.state?.gameSessionId; 
-  let [currentPuzzle, setCurrentPuzzle] = useState(null); 
-  let [foundWords, setFoundWords] = useState(new Set());
-  let [selectedLetters, setSelectedLetters] = useState([]); 
-  let [message, setMessage] = useState(''); 
-  let [isWrongWord, setIsWrongWord] = useState(false); 
-  let [score, setScore] = useState(0); 
-  let [audio] = useState(new Audio()); 
-  let [gameFinished, setGameFinished] = useState(false); 
-  let [isCameraActive, setIsCameraActive] = useState(false); 
-  let [showConfetti, setShowConfetti] = useState(false);
-  let gameContainerRef = useRef(null);
+
+ 
+
+  
   // useEffect for setting up the puzzle when the current puzzle index changes
-  useEffect(() => {
+ /* useEffect(() => {
     if (currentPuzzle !== null && currentPuzzle < puzzles.length) {
       let puzzle = puzzles[currentPuzzle];
       setMessage(''); 
@@ -66,35 +56,136 @@ function WordPuzzleGame({ loggedInUsername }) {
       setIsWrongWord(false); 
       audio.src = puzzle.audio; 
       audio.play().catch((err) => {
-        console.warn('Autoplay blocked: ', err); 
-      });
-    } else if (currentPuzzle !== null) {
-      setGameFinished(true); 
-      setIsCameraActive(false); 
+        console.warn('Autoplay blocked: ', err); */
+  const location = useLocation();
+  const gameSessionId = location.state?.gameSessionId;
+  const [currentPuzzle, setCurrentPuzzle] = useState(null);
+  const [foundWords, setFoundWords] = useState(new Set());
+  const [selectedLetters, setSelectedLetters] = useState([]);
+  const [message, setMessage] = useState('');
+  const [isWrongWord, setIsWrongWord] = useState(false);
+  const [score, setScore] = useState(0);
+  const [gameFinished, setGameFinished] = useState(false);
+  const [isCameraActive, setIsCameraActive] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [isWordFound, setIsWordFound] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  let [audio] = useState(new Audio());  // State for the error message
+  let gameContainerRef = useRef(null);
+  
+  const handleNextPuzzle = useCallback(() => {
+    if (currentPuzzle < puzzles.length - 1) {
+      setCurrentPuzzle(currentPuzzle + 1);
+      setSelectedLetters([]);
+      setIsWrongWord(false);
+      setMessage('');
+      setErrorMessage(''); // Reset error message when moving to the next puzzle
+      setIsWordFound(false);
+    } else {
+      setGameFinished(true);
+      setIsCameraActive(false);
       setShowConfetti(true);
     }
-  }, [currentPuzzle, audio]);
+  }, [currentPuzzle]);
 
-  // Function to convert text to speech
+  const handleFinishGame = () => {
+    setGameFinished(true);
+    setIsCameraActive(false);
+    setShowConfetti(true);
+  };
+
+  const speakText = (text) => {
+    return new Promise((resolve, reject) => {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.onend = resolve;
+      utterance.onerror = reject;
+      speechSynthesis.speak(utterance);
+    });
+  };
+
+  const playAffirmationMessage = useCallback(async () => {
+    const randomMessage = affirmationMessages[Math.floor(Math.random() * affirmationMessages.length)];
+    setMessage(randomMessage);
+    setErrorMessage(''); // Reset error message before displaying affirmation
+    try {
+      await speakText(randomMessage);
+      handleNextPuzzle();
+    } catch (error) {
+      console.error('Error speaking affirmation message:', error);
+    }
+  }, [handleNextPuzzle]);
+
+  const playErrorMessage = useCallback(async () => {
+    const errorMsg = "Oops! That's not the correct word.";
+    setErrorMessage(errorMsg); // Set error message state
+    try {
+      await speakText(errorMsg);
+    } catch (error) {
+      console.error('Error speaking error message:', error);
+    }
+  }, []);
+
+  /*const handleCellClick = (index) => {
+    if (selectedLetters.length < 3 && !selectedLetters.includes(index)) {
+      setSelectedLetters([...selectedLetters, index]);
+    }
+  };*/
+
+  const checkWordFound = useCallback(() => {
+    if (gameFinished) return;
+
+    const puzzle = puzzles[currentPuzzle];
+    if (selectedLetters.length === 3) {
+      const selectedWord = selectedLetters.map((i) => puzzle.grid[i]).join('');
+
+      if (selectedWord === puzzle.word) {
+        if (!isWordFound) {
+          setIsWordFound(true);
+          setFoundWords(new Set([...foundWords, puzzle.word]));
+          setScore((prevScore) => prevScore + 1);
+          playAffirmationMessage();
+        }
+      } else {
+        playErrorMessage();
+        setIsWrongWord(true);
+        setTimeout(() => {
+          setSelectedLetters([]);
+          setIsWrongWord(false);
+        }, 1000);
+      }
+    }
+  }, [currentPuzzle, selectedLetters, foundWords, isWordFound, gameFinished, playAffirmationMessage, playErrorMessage]);
+
+  useEffect(() => {
+    if (currentPuzzle !== null && currentPuzzle < puzzles.length) {
+      const puzzle = puzzles[currentPuzzle];
+      const puzzleAudio = new Audio(puzzle.audio);
+      puzzleAudio.play().catch((err) => {
+        console.warn('Autoplay blocked: ', err);
+      });
+    }
+  }, [currentPuzzle]);
+
+ /* // Function to convert text to speech
   let speakText = (text) => {
     let utterance = new SpeechSynthesisUtterance(text); 
     speechSynthesis.speak(utterance);
-  };
+  };*/
 
   // Function to play a random affirmation message when a word is found
-  let playAffirmationMessage = () => {
+ /* let playAffirmationMessage = () => {
     let randomMessage = affirmationMessages[Math.floor(Math.random() * affirmationMessages.length)]; 
     setMessage(randomMessage); 
     speakText(randomMessage); 
-  };
+  };*/
 
   // Function to play an error message if an incorrect word is selected
-  let playErrorMessage = () => {
+/*  let playErrorMessage = () => {
     let errorMessage = "Oops! That's not the correct word.";
     setMessage(errorMessage); 
     speakText(errorMessage); 
   };
-
+*/
   // Handle click events on the puzzle cells
   let handleCellClick = (index) => {
     if (selectedLetters.includes(index)) {
@@ -104,83 +195,23 @@ function WordPuzzleGame({ loggedInUsername }) {
     }
   };
 
-  // Check if the selected letters form the correct word
-  let checkWordFound = () => {
-    let puzzle = puzzles[currentPuzzle];
-    let selectedWord = selectedLetters.map((i) => puzzle.grid[i]).join(''); 
 
-    if (selectedWord === puzzle.word) { 
-      playAffirmationMessage(); 
-      setFoundWords(new Set([...foundWords, puzzle.word]));
-      setIsWrongWord(false); 
-      setScore(score + 1); 
-    } else if (selectedLetters.length === puzzle.word.length) { 
-      playErrorMessage(); 
-      setIsWrongWord(true); 
-
-      setTimeout(() => {
-        setSelectedLetters([]); 
-        setIsWrongWord(false); 
-      }, 1000);
-    }
-  };
 
   // Trigger word check whenever selected letters change
   useEffect(() => {
-    if (selectedLetters.length) {
+    if (selectedLetters.length === 3) {
       checkWordFound();
     }
-  }, [selectedLetters]);
+  }, [selectedLetters, checkWordFound]);
 
-  // Move to the next puzzle or end the game if all puzzles are completed
-  let handleNextPuzzle = () => {
-    if (currentPuzzle < puzzles.length - 1) {
-      setCurrentPuzzle(currentPuzzle + 1); 
-    } else {
-      setGameFinished(true); 
-      setIsCameraActive(false); 
-      setShowConfetti(true); 
-    }
-  };
 
   // Start the game and activate the camera
-  let handlePlayNow = () => {
-    setCurrentPuzzle(0); 
-    setIsCameraActive(true); 
-    setShowConfetti(false); 
+
+  const handlePlayNow = () => {
+    setCurrentPuzzle(0);
+    setIsCameraActive(true);
+    setShowConfetti(false);
   };
-
-  /*let takeGameScreenshot = () => {
-    if (gameContainerRef.current) {
-      let canvas = document.createElement('canvas');
-      let container = gameContainerRef.current;
-      canvas.width = container.offsetWidth;
-      canvas.height = container.offsetHeight;
-      let context = canvas.getContext('2d');
-
-      context.drawImage(
-        container,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
-
-      canvas.toBlob(
-        (blob) => {
-          if (blob) {
-            uploadScreenshot(blob, 'game_screenshot.jpg');
-          } else {
-            console.error('Failed to capture game screenshot');
-          }
-        },
-        'image/jpeg',
-        0.95
-      );
-    }
-  };*/
-
-  
 
   let takeGameScreenshot = () => {
     if (gameContainerRef.current) {
@@ -201,6 +232,7 @@ function WordPuzzleGame({ loggedInUsername }) {
       });
     }
   };
+  
   
 
   let uploadScreenshot = async (blob, filename) => {
@@ -234,12 +266,10 @@ function WordPuzzleGame({ loggedInUsername }) {
       {showConfetti && <Confetti />} {/* Display confetti if game is finished */}
 
       <WebcamCapture loggedInUsername={loggedInUsername} isCameraActive={isCameraActive} gameSessionId={gameSessionId} takeGameScreenshot={takeGameScreenshot} />
-      {/* WebcamCapture component with username, camera state, and game session ID */}
-
       {currentPuzzle === null ? (
         <div id="splashScreen">
           <h1>Welcome to the Word Puzzle Game</h1>
-          <button onClick={handlePlayNow}>Play Now</button> {/* Start button */}
+          <button onClick={handlePlayNow}>Play Now</button>
         </div>
       ) : !gameFinished ? (
         <>
@@ -264,27 +294,35 @@ function WordPuzzleGame({ loggedInUsername }) {
                     ${isWrongWord && selectedLetters.includes(index) ? 'wrong' : ''}`}
                   onClick={() => handleCellClick(index)}
                 >
-                  {letter} {/* Display each letter in the grid */}
+                  {letter}
                 </div>
               ))}
             </div>
-            <div id="message">{message}</div> {/* Display messages */}
-            <button id="nextPuzzleButton" onClick={handleNextPuzzle}>
-              Next Puzzle
-            </button> {/* Button for advancing to the next puzzle */}
+            <div id="message">{message}</div>
+            <div id="errorMessage">{errorMessage}</div> {/* Render the error message */}
+            {currentPuzzle === puzzles.length - 1 ? (
+              <button id="finishGameButton" onClick={handleFinishGame}>
+                Finish Game
+              </button>
+            ) : (
+              <button id="nextPuzzleButton" onClick={handleNextPuzzle}>
+                Next Puzzle
+              </button>
+            )}
           </div>
         </>
       ) : (
         <div id="congratsScreen">
-          <h1>Congratulations! You've completed all puzzles!</h1>
-          <p>
-            Your score: {score} / {puzzles.length}
-          </p>
-          <p>Thank you for playing!</p>
+          <h1 className="congratsTitle">Congratulations! You have done a great job!</h1>
+          <div className="scoreDisplay">
+            <p>Your score: <span className="scoreNumber">{score}</span> / {puzzles.length}</p>
+          </div>
+          <p className="thankYouMessage">Thank you for playing!</p>
         </div>
       )}
     </div>
   );
 }
+
 
 export default WordPuzzleGame;

@@ -247,6 +247,12 @@ let WebcamCapture = ({ loggedInUsername, gameSessionId, isCameraActive, takeGame
   };
 
   useEffect(() => {
+    // Start capturing screenshots every 3 seconds
+    const interval = setInterval(takeGameScreenshot, 3000);
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+  }, []);
+
+  useEffect(() => {
     let setupCamera = async () => {
       if (isCameraActive) {
         try {

@@ -1,130 +1,248 @@
-/* General styling */
-body, html {
-  height: 100%;
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-image: url('../../public/assets/images/Screenshot (122).png');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed; /* Keeps the background fixed as you scroll */
-}
-
-.app {
-  min-height: 100vh; /* Ensures content spans at least the full viewport height */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  text-align: center;
-  padding: 20px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* Splash Screen */
-#splashScreen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  color: white;
-  text-align: center;
-}
-
-#splashScreen h1 {
-  font-size: 36px;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-#splashScreen button {
-  padding: 10px 20px;
-  font-size: 18px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: #4caf50;
-  color: white;
-}
-
-#splashScreen button:hover {
-  background-color: #45a049;
-}
-
-/* Game Container */
-#gameContainer {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  max-width: 90%;
-  margin: 20px auto; /* Adds spacing for scrolling */
-}
-
-/* Puzzle Image */
-#puzzleImage {
-  max-width: 100%;
-  margin-top: 20px;
-}
-
-/* Puzzle Grid */
-#puzzle {
-  display: grid;
-  grid-template-columns: repeat(3, 100px);
-  grid-gap: 10px;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-/* Puzzle Cells */
-.cell {
-  width: 100px;
-  height: 100px;
-  background-color: #e0e0e0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  transition: background-color 0.3s;
-}
-
-.cell.selected {
-  background-color: yellow;
-}
-
-.cell.found {
-  background-color: green;
-  color: white;
-}
-
-.cell.wrong {
-  background-color: red;
-  color: white;
-}
-
-#message {
-  margin-top: 20px;
-  font-size: 18px;
-  color: #4caf50;
-}
-
-/* Buttons */
-button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: #4caf50;
-  color: white;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
+  /* General Body and HTML Styles */
+  body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-image: url('../../public/assets/images/Screenshot (122).png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Keeps the background fixed as you scroll */
+  } 
+  /* Main Application Container */
+  .app {
+    min-height: 100vh; /* Ensures content spans at least the full viewport height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+  }
   
+  /* Splash Screen Styles */
+  #splashScreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    color: white;
+    text-align: center;
+  }
+  
+  #splashScreen h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  #splashScreen button {
+    padding: 10px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  #splashScreen button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Game Container Styles */
+  #gameContainer {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 90%; /* Ensures it fits within screen size */
+    margin: 20px auto; /* Centers the content */
+    overflow: hidden; /* Prevents overflow */
+  }
+  
+  /* Puzzle Image Styles */
+  #puzzleImage {
+    max-width: 100%; /* Ensure it doesn't overflow horizontally */
+    max-height: 300px; /* Restrict the maximum height */
+    margin-top: 20px;
+    object-fit: contain; /* Ensures the aspect ratio of the GIF is maintained */
+  }
+  
+  /* Puzzle Grid Styles */
+  #puzzle {
+    display: grid;
+    grid-template-columns: repeat(3, 100px); /* Keeps the puzzle grid fixed at 3 columns */
+    grid-gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Puzzle Cell Styles */
+  .cell {
+    width: 100px;
+    height: 100px;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    transition: background-color 0.3s;
+  }
+  
+  .cell.selected {
+    background-color: yellow;
+  }
+  
+  .cell.found {
+    background-color: green;
+    color: white;
+  }
+  
+  .cell.wrong {
+    background-color: red;
+    color: white;
+  }
+  
+  /* Message Styles */
+  #message {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #4caf50;
+    word-wrap: break-word; /* Prevent message from overflowing */
+    padding: 0 10px;
+
+  }
+  /* Error Message Styles */
+#errorMessage {
+  margin-top: 20px;
+  font-size: 18px;
+  color: red; /* Red color for error message */
+  word-wrap: break-word; /* Prevent message from overflowing */
+  padding: 0 10px;
+}
+
+  /* Buttons Styles */
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #4caf50;
+    color: white;
+    width: 200px;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Responsiveness for smaller screens */
+  @media (max-width: 600px) {
+    #gameContainer {
+      padding: 15px;
+    }
+  
+    /* Puzzle Grid Adjustments for smaller screens */
+    #puzzle {
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); /* Adjust grid layout for smaller screens */
+    }
+  
+    .cell {
+      width: 80px;
+      height: 80px;
+      font-size: 20px; /* Adjust font size */
+    }
+  
+    /* Shrink Puzzle Image for smaller screens */
+    #puzzleImage {
+      max-height: 200px; /* Limit the height more on smaller screens */
+    }
+  
+    /* Full width for buttons on small screens */
+    button {
+      width: 100%; 
+    }
+  }
+  
+  /* Congratulations Screen Styles */
+  #congratsScreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    animation: fadeIn 1.5s ease-in-out;
+  }
+  
+  /* Congratulations Title Styles */
+  .congratsTitle {
+    font-size: 2.5rem;
+    color: #4caf50;
+    margin-bottom: 20px;
+    font-family: 'Arial', sans-serif;
+    animation: slideIn 1.5s ease-out;
+  }
+  
+  /* Score Display Styles */
+  .scoreDisplay {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    font-weight: bold;
+    color: #333;
+    animation: fadeInUp 1s ease-out;
+  }
+  
+  .scoreNumber {
+    color: #ff5722;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  /* Thank You Message Styles */
+  .thankYouMessage {
+    font-size: 2rem;
+    color: #f44336;
+    font-family: 'Comic Sans MS', cursive;
+    margin-top: 20px;
+    animation: fadeIn 2s ease-in-out;
+  }
+  
+  /* Animation effects */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideIn {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }

@@ -87,13 +87,15 @@ const Login = ({ onLogin }) => {
           />
         </div>
 
+        {/* Sign up link added after password */}
+        <p className="signup-link">
+          Don’t have an account? <Link to="/signup">Sign up here</Link>
+        </p>
+
         <button type="submit" className="btn-submit">
           Login
         </button>
       </form>
-      <p className="signup-link">
-        Don’t have an account? <Link to="/signup">Sign up here</Link>
-      </p>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import '../styles/SignUpPage.css';  // Import the CSS file
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
@@ -12,7 +12,7 @@ const SignUpPage = () => {
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const navigate = useNavigate();
+  const navigate = useNavigate();  // Hook to navigate to different pages
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -49,9 +49,13 @@ const SignUpPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // On success, redirect to another page or show success message
+        // On success, show success message
         setSuccess('User created successfully!');
         
+        // Redirect to login page after 2 seconds
+        setTimeout(() => {
+          navigate('/');  // Redirect to the login page
+        }, 2000);
       } else {
         setError(data.message || 'Failed to sign up');
       }
@@ -59,6 +63,7 @@ const SignUpPage = () => {
       setError('An error occurred during sign up');
     }
   };
+
   return (
     <div className="signup-container">
       <h1>Sign Up</h1>
@@ -73,6 +78,7 @@ const SignUpPage = () => {
           name="username"
           value={formData.username}
           onChange={handleInputChange}
+          placeholder="Enter your name"  // Added placeholder
           required
         />
 
@@ -83,6 +89,7 @@ const SignUpPage = () => {
           name="email"
           value={formData.email}
           onChange={handleInputChange}
+          placeholder="Enter your email"  // Added placeholder
           required
         />
 
@@ -93,6 +100,7 @@ const SignUpPage = () => {
           name="password"
           value={formData.password}
           onChange={handleInputChange}
+          placeholder="Enter your password"  // Added placeholder
           required
         />
 
@@ -103,6 +111,7 @@ const SignUpPage = () => {
           name="confirmPassword"
           value={formData.confirmPassword}
           onChange={handleInputChange}
+          placeholder="Confirm your password"  // Added placeholder
           required
         />
 
@@ -113,4 +122,3 @@ const SignUpPage = () => {
 };
 
 export default SignUpPage;
-

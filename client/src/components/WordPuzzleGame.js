@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../styles/style8.css';
 import WebcamCapture from './WebcamCapture';
 import Confetti from 'react-confetti';
+import html2canvas from 'html2canvas';
 
 // Array of puzzle objects, each containing a word, letter grid, image, and audio file
-const puzzles = [
+let puzzles = [
   {
     word: 'CAT',
     grid: ['C', 'A', 'T', 'L', 'B', 'A', 'U', 'Y', 'X'],
@@ -33,7 +34,7 @@ const puzzles = [
 ];
 
 // Array of positive affirmation messages for correct answers
-const affirmationMessages = [
+let affirmationMessages = [
   'Great job! You found the word!',
   'Excellent work!',
   'Well done!',
@@ -42,23 +43,23 @@ const affirmationMessages = [
 ];
 
 function WordPuzzleGame({ loggedInUsername }) {
-  const location = useLocation(); 
-  const gameSessionId = location.state?.gameSessionId; 
-  const [currentPuzzle, setCurrentPuzzle] = useState(null); 
-  const [foundWords, setFoundWords] = useState(new Set());
-  const [selectedLetters, setSelectedLetters] = useState([]); 
-  const [message, setMessage] = useState(''); 
-  const [isWrongWord, setIsWrongWord] = useState(false); 
-  const [score, setScore] = useState(0); 
-  const [audio] = useState(new Audio()); 
-  const [gameFinished, setGameFinished] = useState(false); 
-  const [isCameraActive, setIsCameraActive] = useState(false); 
-  const [showConfetti, setShowConfetti] = useState(false);
-
+  let location = useLocation(); 
+  let gameSessionId = location.state?.gameSessionId; 
+  let [currentPuzzle, setCurrentPuzzle] = useState(null); 
+  let [foundWords, setFoundWords] = useState(new Set());
+  let [selectedLetters, setSelectedLetters] = useState([]); 
+  let [message, setMessage] = useState(''); 
+  let [isWrongWord, setIsWrongWord] = useState(false); 
+  let [score, setScore] = useState(0); 
+  let [audio] = useState(new Audio()); 
+  let [gameFinished, setGameFinished] = useState(false); 
+  let [isCameraActive, setIsCameraActive] = useState(false); 
+  let [showConfetti, setShowConfetti] = useState(false);
+  let gameContainerRef = useRef(null);
   // useEffect for setting up the puzzle when the current puzzle index changes
   useEffect(() => {
     if (currentPuzzle !== null && currentPuzzle < puzzles.length) {
-      const puzzle = puzzles[currentPuzzle];
+      let puzzle = puzzles[currentPuzzle];
       setMessage(''); 
       setSelectedLetters([]); 
       setFoundWords(new Set()); 
@@ -75,27 +76,27 @@ function WordPuzzleGame({ loggedInUsername }) {
   }, [currentPuzzle, audio]);
 
   // Function to convert text to speech
-  const speakText = (text) => {
-    const utterance = new SpeechSynthesisUtterance(text); 
+  let speakText = (text) => {
+    let utterance = new SpeechSynthesisUtterance(text); 
     speechSynthesis.speak(utterance);
   };
 
   // Function to play a random affirmation message when a word is found
-  const playAffirmationMessage = () => {
-    const randomMessage = affirmationMessages[Math.floor(Math.random() * affirmationMessages.length)]; 
+  let playAffirmationMessage = () => {
+    let randomMessage = affirmationMessages[Math.floor(Math.random() * affirmationMessages.length)]; 
     setMessage(randomMessage); 
     speakText(randomMessage); 
   };
 
   // Function to play an error message if an incorrect word is selected
-  const playErrorMessage = () => {
-    const errorMessage = "Oops! That's not the correct word.";
+  let playErrorMessage = () => {
+    let errorMessage = "Oops! That's not the correct word.";
     setMessage(errorMessage); 
     speakText(errorMessage); 
   };
 
   // Handle click events on the puzzle cells
-  const handleCellClick = (index) => {
+  let handleCellClick = (index) => {
     if (selectedLetters.includes(index)) {
       setSelectedLetters(selectedLetters.filter((i) => i !== index)); 
     } else {
@@ -104,9 +105,9 @@ function WordPuzzleGame({ loggedInUsername }) {
   };
 
   // Check if the selected letters form the correct word
-  const checkWordFound = () => {
-    const puzzle = puzzles[currentPuzzle];
-    const selectedWord = selectedLetters.map((i) => puzzle.grid[i]).join(''); 
+  let checkWordFound = () => {
+    let puzzle = puzzles[currentPuzzle];
+    let selectedWord = selectedLetters.map((i) => puzzle.grid[i]).join(''); 
 
     if (selectedWord === puzzle.word) { 
       playAffirmationMessage(); 
@@ -132,7 +133,7 @@ function WordPuzzleGame({ loggedInUsername }) {
   }, [selectedLetters]);
 
   // Move to the next puzzle or end the game if all puzzles are completed
-  const handleNextPuzzle = () => {
+  let handleNextPuzzle = () => {
     if (currentPuzzle < puzzles.length - 1) {
       setCurrentPuzzle(currentPuzzle + 1); 
     } else {
@@ -143,17 +144,96 @@ function WordPuzzleGame({ loggedInUsername }) {
   };
 
   // Start the game and activate the camera
-  const handlePlayNow = () => {
+  let handlePlayNow = () => {
     setCurrentPuzzle(0); 
     setIsCameraActive(true); 
     setShowConfetti(false); 
   };
 
+  /*let takeGameScreenshot = () => {
+    if (gameContainerRef.current) {
+      let canvas = document.createElement('canvas');
+      let container = gameContainerRef.current;
+      canvas.width = container.offsetWidth;
+      canvas.height = container.offsetHeight;
+      let context = canvas.getContext('2d');
+
+      context.drawImage(
+        container,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            uploadScreenshot(blob, 'game_screenshot.jpg');
+          } else {
+            console.error('Failed to capture game screenshot');
+          }
+        },
+        'image/jpeg',
+        0.95
+      );
+    }
+  };*/
+
+  
+
+  let takeGameScreenshot = () => {
+    if (gameContainerRef.current) {
+      html2canvas(gameContainerRef.current/*, { scale: 2 }*/).then((canvas) => {
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              uploadScreenshot(blob, 'game_screenshot.jpg');
+            } else {
+              console.error('Failed to capture game screenshot');
+            }
+          },
+          'image/jpeg',
+          0.95
+        );
+      }).catch((err) => {
+        console.error('Error capturing game screenshot:', err);
+      });
+    }
+  };
+  
+
+  let uploadScreenshot = async (blob, filename) => {
+    let formData = new FormData();
+    formData.append('file', blob, filename);
+    formData.append('username', loggedInUsername);
+    formData.append('gameSessionId', gameSessionId);
+    formData.append('type', 'screenshot');
+    try {
+      let response = await fetch('http://localhost:5000/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to upload screenshot: ' + (await response.text()));
+      }
+
+      let data = await response.json();
+      console.log('Screenshot uploaded:', data);
+    } catch (error) {
+      console.error('Error uploading screenshot:', error);
+    }
+  };
+
+
+
+
   return (
     <div className="app">
       {showConfetti && <Confetti />} {/* Display confetti if game is finished */}
 
-      <WebcamCapture loggedInUsername={loggedInUsername} isCameraActive={isCameraActive} gameSessionId={gameSessionId} />
+      <WebcamCapture loggedInUsername={loggedInUsername} isCameraActive={isCameraActive} gameSessionId={gameSessionId} takeGameScreenshot={takeGameScreenshot} />
       {/* WebcamCapture component with username, camera state, and game session ID */}
 
       {currentPuzzle === null ? (
@@ -163,7 +243,7 @@ function WordPuzzleGame({ loggedInUsername }) {
         </div>
       ) : !gameFinished ? (
         <>
-          <div id="gameContainer">
+          <div ref={gameContainerRef} id="gameContainer">
             <img
               id="puzzleImage"
               src={puzzles[currentPuzzle].image}

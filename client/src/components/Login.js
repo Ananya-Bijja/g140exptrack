@@ -1,21 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import '../styles/Login.css';
-
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     if (!username || !password) {
       setErrorMessage('Please fill in all fields');
       return;
     }
-
     try {
       const response = await fetch('http://localhost:5000/api/login', {
         method: 'POST',
@@ -57,14 +53,11 @@ const Login = ({ onLogin }) => {
       setErrorMessage('An error occurred during login');
     }
   };
-
   return (
     <div className="login-container">
       <form onSubmit={handleSubmit} className="login-form">
         <h2>Login</h2>
-
         {errorMessage && <p className="error">{errorMessage}</p>}
-
         <div className="form-group">
           <label>Username:</label>
           <input
@@ -75,7 +68,6 @@ const Login = ({ onLogin }) => {
             required
           />
         </div>
-
         <div className="form-group">
           <label>Password:</label>
           <input
@@ -86,12 +78,10 @@ const Login = ({ onLogin }) => {
             required
           />
         </div>
-
         {/* Sign up link added after password */}
         <p className="signup-link">
           Don’t have an account? <Link to="/signup">Sign up here</Link>
         </p>
-
         <button type="submit" className="btn-submit">
           Login
         </button>

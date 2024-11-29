@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import '../styles/style8.css';
 import WebcamCapture from './WebcamCapture';
 import Confetti from 'react-confetti';
-
 const puzzles = [
   {
     word: 'CAT',

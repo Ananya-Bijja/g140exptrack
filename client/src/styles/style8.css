@@ -7,8 +7,7 @@
     background-size: cover;
     background-position: center;
     background-attachment: fixed; /* Keeps the background fixed as you scroll */
-  }
-  
+  } 
   /* Main Application Container */
   .app {
     min-height: 100vh; /* Ensures content spans at least the full viewport height */

@@ -321,6 +321,7 @@ app.post('/api/analyze/:sessionId', async (req, res) => {
         try {
           let result = await analyzeImage(imagePath);
           image.emotions = result.emotions; // Store the emotions
+         
           return image;
         } catch (error) {
           console.error(`Error analyzing image ${image.imageUrl}:`, error);
@@ -329,11 +330,17 @@ app.post('/api/analyze/:sessionId', async (req, res) => {
         }
       }));
 
+
+      let hasEmptyEmotions = analysisResults.some(image => image.emotions.length === 0);
+      if (!hasEmptyEmotions) {
       // Update session with analyzed results and set the flag
       session.images = analysisResults;
       session.flag = true;
       await user.save(); // Save changes to the database
     }
+    else{        console.warn('Some images have no emotions detected. Flag not set to true.');
+    }
+  }
 
     res.status(200).json({ result: session.images });
   } catch (error) {
@@ -417,7 +424,7 @@ async function showEmotionAnalysis(gameSessionId) {
   }
 }*/
 
-
+/*
 const showEmotionAnalysis = async (gameSessionId) => {
   // Find the user with the specified game session ID
   let user = await User.findOne({ "emotionAnalysis.gameSessionId": gameSessionId });
@@ -440,7 +447,7 @@ const showEmotionAnalysis = async (gameSessionId) => {
   console.log(gameSession);
   return gameSession.images;
 };
-
+*/
 
 app.post('/api/analysis-summary/:sessionId', async (req, res) => {
   let { sessionId } = req.params;
@@ -540,8 +547,7 @@ app.get('/api/detailed-analysis/:sessionId', async (req, res) => {
         imagesWithEmotions: session.images.map(image => {
           // Find the corresponding screenshot captured at the same timestamp (if any)
           let matchingScreenshot = session.screenshots.find(screenshot =>
-          { console.log('Comparing Image Timestamp:', new Date(image.capturedAt).getTime());
-            console.log('With Screenshot Timestamp:', new Date(screenshot.capturedAt).getTime());
+          { 
           
             return Math.abs(new Date(screenshot.capturedAt).getTime() - new Date(image.capturedAt).getTime())<=1000;
 

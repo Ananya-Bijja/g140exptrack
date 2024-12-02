@@ -233,12 +233,7 @@ function WordPuzzleGame({ loggedInUsername }) {
     }
   };
   
- /* useEffect(() => {
-    // Start capturing screenshots every 3 seconds
-    const interval = setInterval(takeGameScreenshot, 3000);
-    return () => clearInterval(interval); // Cleanup interval on component unmount
-  }, []);*/
-  
+
 
   let uploadScreenshot = async (blob, filename) => {
     let formData = new FormData();

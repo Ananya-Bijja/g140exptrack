@@ -152,16 +152,12 @@ app.get('/api/users', async (req, res) => {
 // Fetch game sessions for a specific user
 app.get('/api/game-sessions/:userId', async (req, res) => {
   let { userId } = req.params;
-  console.log('Received request for userId:', userId);
   try {
     // Find the user and populate the emotionAnalysis field to include game sessions
     let user = await User.findById(userId).select('emotionAnalysis'); // Assuming 'emotionAnalysis' contains the sessions
-    
     if (!user) {
-      console.log('User not found');
       return res.status(404).json({ message: 'User not found' });
     }
-
     // Return the user's emotion analysis (which includes game sessions)
     res.status(200).json({ sessions: user.emotionAnalysis });
   } catch (error) {
@@ -169,6 +165,8 @@ app.get('/api/game-sessions/:userId', async (req, res) => {
     res.status(500).json({ message: 'Error fetching game sessions' });
   }
 });
+
+
 // Assuming you have a User model and Mongoose set up
 app.post('/api/create-game-session', async (req, res) => {
   let { username } = req.body;
@@ -258,6 +256,43 @@ let test =await User.findOneAndUpdate(
   }
 });
 
+/*
+app.post('/api/analyze/:sessionId', async (req, res) => {
+  let { sessionId } = req.params;
+  let { username } = req.body;
+  if (!username || !sessionId) {
+    return res.status(400).json({ message: 'Username and sessionId are required' });
+  }
+  try {
+    let user = await User.findOne({ username, "emotionAnalysis.gameSessionId": sessionId });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User or game session not found' });
+    }
+    let session = user.emotionAnalysis.find(session => session.gameSessionId === sessionId);
+    let analysisResults = await Promise.all(session.images.map(async (image) => {
+      let imagePath = path.join(uploadDir, image.imageUrl);
+      try {
+        let result = await analyzeImage(imagePath);
+        image.emotions = result.emotions;
+        return image; // Ensure "emotions" array is included
+      } catch (error) {
+        console.error(`Error analyzing image ${image.imageUrl}:`, error);
+        image.emotions = []; // If error occurs, store empty emotions
+        image.error = error.message;
+        return image;
+      }
+    }));
+    await User.updateOne(
+      { username, "emotionAnalysis.gameSessionId": sessionId },
+      { $set: { "emotionAnalysis.$.images": analysisResults } }
+    );
+    res.status(200).json({ result: analysisResults });
+  } catch (error) {
+    console.error('Error analyzing session:', error);
+    res.status(500).json({ message: 'Error analyzing session', error: error.message });
+  }
+});*/
 
 app.post('/api/analyze/:sessionId', async (req, res) => {
   let { sessionId } = req.params;
@@ -268,41 +303,45 @@ app.post('/api/analyze/:sessionId', async (req, res) => {
   }
 
   try {
+    // Fetch the user and session
     let user = await User.findOne({ username, "emotionAnalysis.gameSessionId": sessionId });
     if (!user) {
       return res.status(404).json({ message: 'User or game session not found' });
     }
 
     let session = user.emotionAnalysis.find(session => session.gameSessionId === sessionId);
+    if (!session) {
+      return res.status(404).json({ message: 'Game session not found' });
+    }
 
-    let analysisResults = await Promise.all(session.images.map(async (image) => {
-      let imagePath = path.join(uploadDir, image.imageUrl);
-      
+    if (!session.flag) {
+      // Perform image analysis
+      let analysisResults = await Promise.all(session.images.map(async (image) => {
+        let imagePath = path.join(uploadDir, image.imageUrl);
+        try {
+          let result = await analyzeImage(imagePath);
+          image.emotions = result.emotions; // Store the emotions
+          return image;
+        } catch (error) {
+          console.error(`Error analyzing image ${image.imageUrl}:`, error);
+          image.emotions = []; // Store empty emotions in case of error
+          return image;
+        }
+      }));
 
-      try {
-        let result = await analyzeImage(imagePath);
-        
-        image.emotions = result.emotions;
-        return image; // Ensure "emotions" array is included
-      } catch (error) {
-        console.error(`Error analyzing image ${image.imageUrl}:`, error);
-        image.emotions = []; // If error occurs, store empty emotions
-        image.error = error.message;
-        return image;
-      }
-    }));
+      // Update session with analyzed results and set the flag
+      session.images = analysisResults;
+      session.flag = true;
+      await user.save(); // Save changes to the database
+    }
 
-    await User.updateOne(
-      { username, "emotionAnalysis.gameSessionId": sessionId },
-      { $set: { "emotionAnalysis.$.images": analysisResults } }
-    );
-
-    res.status(200).json({ result: analysisResults });
+    res.status(200).json({ result: session.images });
   } catch (error) {
     console.error('Error analyzing session:', error);
     res.status(500).json({ message: 'Error analyzing session', error: error.message });
   }
 });
+
 
 async function analyzeImage(imagePath) {
   try {
@@ -337,7 +376,7 @@ async function analyzeImage(imagePath) {
   }
 }
 
-
+/*
 // Utility function to perform emotion analysis
 async function showEmotionAnalysis(gameSessionId) {
   let user = await User.findOne({ "emotionAnalysis.gameSessionId": gameSessionId });
@@ -357,7 +396,7 @@ async function showEmotionAnalysis(gameSessionId) {
           try {
               let result = await analyzeImage(imagePath);
               image.emotions = result.emotions;
-              console.log("analysis aithundhi")
+              
               return image; 
           } catch (error) {
               image.emotions = [];
@@ -373,12 +412,77 @@ async function showEmotionAnalysis(gameSessionId) {
       return analysisResult;
   } else {
       // If flag is true, return previously analyzed results
-      console.log("unnadhi chupisthundhi");
+      
       return gameSession.images;
   }
-}
+}*/
 
 
+const showEmotionAnalysis = async (gameSessionId) => {
+  // Find the user with the specified game session ID
+  let user = await User.findOne({ "emotionAnalysis.gameSessionId": gameSessionId });
+  if (!user) {
+      throw new Error('User not found');
+  }
+
+  // Find the specific game session
+  let gameSession = user.emotionAnalysis.find(session => session.gameSessionId === gameSessionId);
+  if (!gameSession) {
+      throw new Error('Game session not found');
+  }
+
+  // Return stored analysis results, regardless of the flag status
+  if (gameSession.images.length === 0) {
+      throw new Error('No images found in the game session');
+  }
+
+  console.log("Returning stored analysis results");
+  console.log(gameSession);
+  return gameSession.images;
+};
+
+
+app.post('/api/analysis-summary/:sessionId', async (req, res) => {
+  let { sessionId } = req.params;
+  let { username } = req.body;
+
+  if (!username || !sessionId) {
+    return res.status(400).json({ message: 'Session ID and Username are required' });
+  }
+
+  try {
+    // Fetch the user and session
+    let user = await User.findOne({ username, "emotionAnalysis.gameSessionId": sessionId });
+    if (!user) {
+      return res.status(404).json({ message: 'User or game session not found' });
+    }
+
+    let session = user.emotionAnalysis.find(session => session.gameSessionId === sessionId);
+    if (!session || session.images.length === 0) {
+      return res.status(404).json({ message: 'No images found in the game session' });
+    }
+
+    // Calculate emotion summary
+    let emotionSummary = {};
+    session.images.forEach(image => {
+      if (image.emotions) {
+        image.emotions.forEach(emotion => {
+          let emotionLabel = emotion.label;
+          let emotionScore = emotion.score;
+          emotionSummary[emotionLabel] = (emotionSummary[emotionLabel] || 0) + emotionScore;
+        });
+      }
+    });
+
+    res.status(200).json(emotionSummary);
+  } catch (error) {
+    console.error('Error fetching analysis summary:', error);
+    res.status(500).json({ message: 'Error fetching analysis summary', error: error.message });
+  }
+});
+
+
+/*
 // Route to handle analysis summary
 app.post('/api/analysis-summary/:sessionId', async (req, res) => {
   let { sessionId } = req.params;  // Extract sessionId from URL parameters
@@ -418,7 +522,7 @@ app.post('/api/analysis-summary/:sessionId', async (req, res) => {
     res.status(500).json({ message: 'Error fetching analysis summary', error: err.message });
   }
 });
-
+*/
 
 
 app.get('/api/detailed-analysis/:sessionId', async (req, res) => {

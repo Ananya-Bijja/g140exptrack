@@ -215,7 +215,7 @@ function WordPuzzleGame({ loggedInUsername }) {
 
   let takeGameScreenshot = () => {
     if (gameContainerRef.current) {
-      html2canvas(gameContainerRef.current/*, { scale: 2 }*/).then((canvas) => {
+      html2canvas(gameContainerRef.current,{crossOrigin:"anonymous"} ,{allowTaint: true},{ useCORS: true }/*,{ scale: 2 }*/).then((canvas) => {
         canvas.toBlob(
           (blob) => {
             if (blob) {
@@ -233,6 +233,11 @@ function WordPuzzleGame({ loggedInUsername }) {
     }
   };
   
+ /* useEffect(() => {
+    // Start capturing screenshots every 3 seconds
+    const interval = setInterval(takeGameScreenshot, 3000);
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+  }, []);*/
   
 
   let uploadScreenshot = async (blob, filename) => {

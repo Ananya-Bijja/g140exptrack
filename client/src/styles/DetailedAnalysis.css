@@ -1,0 +1,38 @@
+/* DetailedAnalysis.css */
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .analysis-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url("../../public/assets/images/admbg.png") no-repeat center center fixed;
+    background-size: cover;
+  }
+  
+  .chart-container {
+    width: 80%;
+    max-width: 1000px;
+    margin-bottom: 20px;
+  }
+  
+  .center-button {
+    padding: 15px 30px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .center-button:hover {
+    background-color: #0056b3;
+  }
+  

@@ -6,6 +6,8 @@ let multer = require('multer');
 let path = require('path');
 let fs = require('fs');
 
+const User = require('./models/user'); // Import User model
+const GameSession = require('./models/gameSession'); // Import GameSession model
 
 let app = express();
 let PORT = process.env.PORT || 5000;
@@ -20,7 +22,7 @@ mongoose.connect('mongodb+srv://ananya_ansh:Ananya%40123%24@cluster0.3p1q6.mongo
   console.error('Error connecting to MongoDB:', err);
 });
 
-
+/*
 let imageSchema = new mongoose.Schema({
   imageUrl: { type: String, required: true },
   emotions: [{
@@ -56,7 +58,7 @@ let userSchema = new mongoose.Schema({
 });
 
 let User = mongoose.model('User', userSchema);
-
+*/
 let uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 
@@ -547,9 +549,9 @@ app.get('/api/detailed-analysis/:sessionId', async (req, res) => {
         imagesWithEmotions: session.images.map(image => {
           // Find the corresponding screenshot captured at the same timestamp (if any)
           let matchingScreenshot = session.screenshots.find(screenshot =>
-          { 
-          
-            return Math.abs(new Date(screenshot.capturedAt).getTime() - new Date(image.capturedAt).getTime())<=1000;
+          { console.log('Comparing Image Timestamp:', new Date(image.capturedAt).getTime());
+            console.log('With Screenshot Timestamp:', new Date(screenshot.capturedAt).getTime());
+            return Math.abs(new Date(screenshot.capturedAt).getTime() - new Date(image.capturedAt).getTime())<=3000;
 
         });
           

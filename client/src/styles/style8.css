@@ -118,14 +118,14 @@
     word-wrap: break-word; /* Prevent message from overflowing */
     padding: 0 10px;
 
-  }
-  /* Error Message Styles */
+}
+/* Error Message Styles */
 #errorMessage {
-  margin-top: 20px;
-  font-size: 18px;
-  color: red; /* Red color for error message */
-  word-wrap: break-word; /* Prevent message from overflowing */
-  padding: 0 10px;
+margin-top: 20px;
+font-size: 18px;
+color: red; /* Red color for error message */
+word-wrap: break-word; /* Prevent message from overflowing */
+padding: 0 10px;
 }
 
   /* Buttons Styles */

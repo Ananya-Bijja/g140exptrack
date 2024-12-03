@@ -1,248 +1,343 @@
-  /* General Body and HTML Styles */
-  body, html {
-    height: 100%;
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-image: url('../../public/assets/images/Screenshot (122).png');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed; /* Keeps the background fixed as you scroll */
-  } 
-  /* Main Application Container */
-  .app {
-    min-height: 100vh; /* Ensures content spans at least the full viewport height */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    text-align: center;
-    padding: 20px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  
-  /* Splash Screen Styles */
-  #splashScreen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    color: white;
-    text-align: center;
-  }
-  
-  #splashScreen h1 {
-    font-size: 36px;
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  #splashScreen button {
-    padding: 10px 20px;
-    font-size: 18px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: #4caf50;
-    color: white;
-  }
-  
-  #splashScreen button:hover {
-    background-color: #45a049;
-  }
-  
-  /* Game Container Styles */
-  #gameContainer {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 90%; /* Ensures it fits within screen size */
-    margin: 20px auto; /* Centers the content */
-    overflow: hidden; /* Prevents overflow */
-  }
-  
-  /* Puzzle Image Styles */
-  #puzzleImage {
-    max-width: 100%; /* Ensure it doesn't overflow horizontally */
-    max-height: 300px; /* Restrict the maximum height */
-    margin-top: 20px;
-    object-fit: contain; /* Ensures the aspect ratio of the GIF is maintained */
-  }
-  
-  /* Puzzle Grid Styles */
-  #puzzle {
-    display: grid;
-    grid-template-columns: repeat(3, 100px); /* Keeps the puzzle grid fixed at 3 columns */
-    grid-gap: 10px;
-    justify-content: center;
-    margin-top: 20px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  
-  /* Puzzle Cell Styles */
-  .cell {
-    width: 100px;
-    height: 100px;
-    background-color: #e0e0e0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    transition: background-color 0.3s;
-  }
-  
-  .cell.selected {
-    background-color: yellow;
-  }
-  
-  .cell.found {
-    background-color: green;
-    color: white;
-  }
-  
-  .cell.wrong {
-    background-color: red;
-    color: white;
-  }
-  
-  /* Message Styles */
-  #message {
-    margin-top: 20px;
-    font-size: 18px;
-    color: #4caf50;
-    word-wrap: break-word; /* Prevent message from overflowing */
-    padding: 0 10px;
-
-  }
-  /* Error Message Styles */
-#errorMessage {
-  margin-top: 20px;
-  font-size: 18px;
-  color: red; /* Red color for error message */
-  word-wrap: break-word; /* Prevent message from overflowing */
-  padding: 0 10px;
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-image: url('../../public/assets/images/Screenshot (122).png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Keeps the background fixed as you scroll */
+} 
+/* Main Application Container */
+.app {
+  min-height: 100vh; /* Ensures content spans at least the full viewport height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-  /* Buttons Styles */
+/* Splash Screen Styles */
+#splashScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: white;
+  text-align: center;
+}
+
+#splashScreen h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+#splashScreen button {
+  padding: 10px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #4caf50;
+  color: white;
+}
+
+#splashScreen button:hover {
+  background-color: #45a049;
+}
+
+/* Game Container Styles */
+#gameContainer {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 90%; /* Ensures it fits within screen size */
+  margin: 20px auto; /* Centers the content */
+  overflow: hidden; /* Prevents overflow */
+}
+
+/* Puzzle Image Styles */
+#puzzleImage {
+  max-width: 100%; /* Ensure it doesn't overflow horizontally */
+  max-height: 300px; /* Restrict the maximum height */
+  margin-top: 20px;
+  object-fit: contain; /* Ensures the aspect ratio of the GIF is maintained */
+}
+
+/* Puzzle Grid Styles */
+#puzzle {
+  display: grid;
+  grid-template-columns: repeat(3, 100px); /* Keeps the puzzle grid fixed at 3 columns */
+  grid-gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Puzzle Cell Styles */
+.cell {
+  width: 100px;
+  height: 100px;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  transition: background-color 0.3s;
+}
+
+.cell.selected {
+  background-color: yellow;
+}
+
+.cell.found {
+  background-color: green;
+  color: white;
+}
+
+.cell.wrong {
+  background-color: red;
+  color: white;
+}
+
+/* Message Styles */
+#message {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #4caf50;
+  word-wrap: break-word; /* Prevent message from overflowing */
+  padding: 0 10px;
+
+}
+/* Error Message Styles */
+#errorMessage {
+margin-top: 20px;
+font-size: 18px;
+color: red; /* Red color for error message */
+word-wrap: break-word; /* Prevent message from overflowing */
+padding: 0 10px;
+}
+
+/* Buttons Styles */
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #4caf50;
+  color: white;
+  width: 200px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+/* Responsiveness for smaller screens */
+@media (max-width: 600px) {
+  #gameContainer {
+    padding: 15px;
+  }
+
+  /* Puzzle Grid Adjustments for smaller screens */
+  #puzzle {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); /* Adjust grid layout for smaller screens */
+  }
+
+  .cell {
+    width: 80px;
+    height: 80px;
+    font-size: 20px; /* Adjust font size */
+  }
+
+  /* Shrink Puzzle Image for smaller screens */
+  #puzzleImage {
+    max-height: 200px; /* Limit the height more on smaller screens */
+  }
+
+  /* Full width for buttons on small screens */
   button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: #4caf50;
-    color: white;
-    width: 200px;
+    width: 100%; 
   }
-  
-  button:hover {
-    background-color: #45a049;
-  }
-  
-  /* Responsiveness for smaller screens */
-  @media (max-width: 600px) {
-    #gameContainer {
-      padding: 15px;
-    }
-  
-    /* Puzzle Grid Adjustments for smaller screens */
-    #puzzle {
-      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); /* Adjust grid layout for smaller screens */
-    }
-  
-    .cell {
-      width: 80px;
-      height: 80px;
-      font-size: 20px; /* Adjust font size */
-    }
-  
-    /* Shrink Puzzle Image for smaller screens */
-    #puzzleImage {
-      max-height: 200px; /* Limit the height more on smaller screens */
-    }
-  
-    /* Full width for buttons on small screens */
-    button {
-      width: 100%; 
-    }
-  }
-  
-  /* Congratulations Screen Styles */
-  #congratsScreen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    text-align: center;
-    animation: fadeIn 1.5s ease-in-out;
-  }
-  
-  /* Congratulations Title Styles */
-  .congratsTitle {
-    font-size: 2.5rem;
-    color: #4caf50;
-    margin-bottom: 20px;
-    font-family: 'Arial', sans-serif;
-    animation: slideIn 1.5s ease-out;
-  }
-  
-  /* Score Display Styles */
-  .scoreDisplay {
-    font-size: 1.5rem;
-    margin-bottom: 30px;
-    font-weight: bold;
-    color: #333;
-    animation: fadeInUp 1s ease-out;
-  }
-  
-  .scoreNumber {
-    color: #ff5722;
-    font-size: 2rem;
-    font-weight: bold;
-  }
-  
-  /* Thank You Message Styles */
-  .thankYouMessage {
-    font-size: 2rem;
-    color: #f44336;
-    font-family: 'Comic Sans MS', cursive;
-    margin-top: 20px;
-    animation: fadeIn 2s ease-in-out;
-  }
-  
-  /* Animation effects */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-  
-  @keyframes slideIn {
-    from {
-      transform: translateX(-100%);
-    }
-    to {
-      transform: translateX(0);
-    }
-  }
-  
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+}
+
+/* Congratulations Screen Styles */
+#congratsScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+/* Congratulations Title Styles */
+.congratsTitle {
+  font-size: 2.5rem;
+  color: #4caf50;
+  margin-bottom: 20px;
+  font-family: 'Arial', sans-serif;
+  animation: slideIn 1.5s ease-out;
+}
+
+/* Score Display Styles */
+.scoreDisplay {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  font-weight: bold;
+  color: #333;
+  animation: fadeInUp 1s ease-out;
+}
+
+.scoreNumber {
+  color: #ff5722;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* Thank You Message Styles */
+.thankYouMessage {
+  font-size: 2rem;
+  color: #f44336;
+  font-family: 'Comic Sans MS', cursive;
+  margin-top: 20px;
+  animation: fadeIn 2s ease-in-out;
+}
+@keyframes colorChange {
+  0% { color: lavender; }
+  16% { color: #ff5722; }  /* Red-Orange */
+  32% { color: #4caf50; }  /* Green */
+  48% { color: #3f51b5; }  /* Blue */
+  64% { color: #ffc107; }  /* Amber */
+  80% { color: #e91e63; }  /* Pink */
+  100% { color: lavender; } /* Back to Lavender */
+}
+
+
+/* Optional: If you want to apply to specific element */
+.username {
+  color: lavender; /* Default color */
+  font-weight: bold;
+  animation: colorChange 2s infinite; /* Apply color animation */
+}
+
+/* #welcomeContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#instructionsBox {
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  max-width: 300px;
+  background-color: #f9f9f9;
+}
+
+#instructionsBox h2 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+}
+
+#instructionsBox ul {
+  list-style-type: disc;
+  margin-left: 20px;
+  font-size: 14px;
+}
+
+#splashScreen h1 {
+  text-align: center;
+  color: #333;
+}
+
+#splashScreen button {
+  margin: 20px auto;
+  display: block;
+}
+ */
+ #splashScreen {
+  text-align: center;
+}
+
+#welcomeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Fun Fact Box Design for Dyslexic Kids */
+.funFactBox {
+  background-color: #e3f2fd; /* Pastel blue background for better contrast */
+  border: 2px solid #2196f3; /* Bright blue border for emphasis */
+  padding: 25px;
+  margin-top: 30px;
+  border-radius: 12px; /* Rounded corners for a friendly look */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  font-size: 20px; /* Larger text size for readability */
+  max-width: 400px;
+  width: 100%;
+  color: #212121; /* Dark text color for high contrast */
+  font-family: 'Comic Sans MS', sans-serif; /* Dyslexia-friendly font */
+  text-align: left; /* Left-aligned text for better reading flow */
+}
+
+.funFactHeading {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2196f3; /* Blue color for the heading */
+  margin-bottom: 15px;
+}
+
+.funFactBox p {
+  line-height: 1.6; /* Increase line spacing for clarity */
+  font-size: 18px;
+  color: #333333; /* Dark text for high contrast */
+}
+
+/* Button Styling */
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+
+
+
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+button:hover {
+  background-color: #45a049;
+}

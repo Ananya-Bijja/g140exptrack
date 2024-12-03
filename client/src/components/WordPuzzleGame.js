@@ -4,59 +4,12 @@ import '../styles/style8.css';
 import WebcamCapture from './WebcamCapture';
 import Confetti from 'react-confetti';
 import html2canvas from 'html2canvas';
-
+import { puzzles, affirmationMessages } from '../data/data';
 // Array of puzzle objects, each containing a word, letter grid, image, and audio file
-let puzzles = [
-  {
-    word: 'CAT',
-    grid: ['C', 'A', 'T', 'L', 'B', 'A', 'U', 'Y', 'X'],
-    image: '/assets/images/cat.gif',
-    audio: '/assets/audio/catsound.mp3',
-  },
-  {
-    word: 'DOG',
-    grid: ['Q', 'M', 'D', 'H', 'O', 'P', 'G', 'X', 'W'],
-    image: '/assets/images/dog1.gif',
-    audio: '/assets/audio/dogsound.mp3',
-  },
-  {
-    word: 'SUN',
-    grid: ['S', 'B', 'P', 'U', 'C', 'E', 'N', 'F', 'Q'],
-    image: '/assets/images/giphy.gif',
-    audio: '/assets/audio/sunsound.mp3',
-  },
-  {
-    word: 'CAR',
-    grid: ['C', 'Y', 'O', 'A', 'P', 'I', 'R', 'K', 'S'],
-    image: '/assets/images/car.gif',
-    audio: '/assets/audio/carsound.mp3',
-  },
-];
 
-const affirmationMessages = [
-  'Great job! You found the word!',
-  'Excellent work!',
-  'Well done!',
-  'Awesome! Keep going!',
-  "You're amazing!",
-];
 
 function WordPuzzleGame({ loggedInUsername }) {
 
- 
-
-  
-  // useEffect for setting up the puzzle when the current puzzle index changes
- /* useEffect(() => {
-    if (currentPuzzle !== null && currentPuzzle < puzzles.length) {
-      let puzzle = puzzles[currentPuzzle];
-      setMessage(''); 
-      setSelectedLetters([]); 
-      setFoundWords(new Set()); 
-      setIsWrongWord(false); 
-      audio.src = puzzle.audio; 
-      audio.play().catch((err) => {
-        console.warn('Autoplay blocked: ', err); */
   const location = useLocation();
   const gameSessionId = location.state?.gameSessionId;
   const [currentPuzzle, setCurrentPuzzle] = useState(null);
@@ -187,6 +140,7 @@ function WordPuzzleGame({ loggedInUsername }) {
   };
 */
   // Handle click events on the puzzle cells
+  
   let handleCellClick = (index) => {
     if (selectedLetters.includes(index)) {
       setSelectedLetters(selectedLetters.filter((i) => i !== index)); 
@@ -260,12 +214,24 @@ function WordPuzzleGame({ loggedInUsername }) {
 
 
 
+  useEffect(() => {
+    // Set up the interval for capturing and uploading screenshots every 3 seconds
+    const screenshotInterval = setInterval(() => {
+      takeGameScreenshot();
+    }, 3000);
+
+    // Clean up the interval when the game is finished or the component is unmounted
+    return () => {
+      clearInterval(screenshotInterval);
+    };
+  }, [gameFinished]);
+
 
   return (
     <div className="app">
       {showConfetti && <Confetti />} {/* Display confetti if game is finished */}
 
-      <WebcamCapture loggedInUsername={loggedInUsername} isCameraActive={isCameraActive} gameSessionId={gameSessionId} takeGameScreenshot={takeGameScreenshot} />
+      <WebcamCapture loggedInUsername={loggedInUsername} isCameraActive={isCameraActive} gameSessionId={gameSessionId}  />
       {currentPuzzle === null ? (
         <div id="splashScreen">
           <h1>Welcome to the Word Puzzle Game</h1>
@@ -279,7 +245,7 @@ function WordPuzzleGame({ loggedInUsername }) {
               src={puzzles[currentPuzzle].image}
               alt="Puzzle"
             /> {/* Puzzle image */}
-            <div id="puzzle">
+           <div id="puzzle">
               {puzzles[currentPuzzle].grid.map((letter, index) => (
                 <div
                   key={index}
@@ -326,3 +292,4 @@ function WordPuzzleGame({ loggedInUsername }) {
 
 
 export default WordPuzzleGame;
+

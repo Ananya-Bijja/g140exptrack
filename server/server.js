@@ -115,14 +115,23 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Fetch all users
+// app.get('/api/users', async (req, res) => {
+//   try {
+//     let users = await User.find({}, { password: 0 }); // Exclude password from results
+//     res.status(200).json(users);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching users', error: error.message });
+//   }
+// });
 app.get('/api/users', async (req, res) => {
   try {
-    let users = await User.find({}, { password: 0 }); // Exclude password from results
+    let users = await User.find({ role: 'child' }, { password: 0 }); // Only fetch users with role 'child'
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching users', error: error.message });
   }
 });
+
 
 // Fetch game sessions for a user
 app.get('/api/game-sessions/:userId', async (req, res) => {

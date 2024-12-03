@@ -5,20 +5,16 @@ let bcrypt = require('bcryptjs');
 let multer = require('multer');
 let path = require('path');
 let fs = require('fs');
-<<<<<<< HEAD
 
 const User = require('./models/user'); // Import User model
 const GameSession = require('./models/gameSession'); // Import GameSession model
 
-=======
->>>>>>> 34992d5fa3dfb61cd7ac8a09e14914d6839558a5
 let app = express();
 let PORT = process.env.PORT || 5000;
 // MongoDB Connection
-mongoose.connect('mongodb+srv://Vinuthna:Vinnu2005@cluster0.uyw64.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+mongoose.connect('mongodb+srv://ananya_ansh:Ananya%40123%24@cluster0.3p1q6.mongodb.net/g140?', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-<<<<<<< HEAD
 }).then(() => {
   console.log('Connected to MongoDB');
 }).catch(err => {
@@ -26,12 +22,6 @@ mongoose.connect('mongodb+srv://Vinuthna:Vinnu2005@cluster0.uyw64.mongodb.net/?r
 });
 
 /*
-=======
-}).then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('Error connecting to MongoDB:', err));
-
-// Schemas
->>>>>>> 34992d5fa3dfb61cd7ac8a09e14914d6839558a5
 let imageSchema = new mongoose.Schema({
   imageUrl: { type: String, required: true },
   emotions: [{
@@ -62,12 +52,7 @@ let userSchema = new mongoose.Schema({
 });
 
 let User = mongoose.model('User', userSchema);
-<<<<<<< HEAD
 */
-=======
-
-// Directory Setup for Image Uploads
->>>>>>> 34992d5fa3dfb61cd7ac8a09e14914d6839558a5
 let uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 
@@ -186,7 +171,6 @@ app.post('/upload', upload.single('file'), async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
 /*
 app.post('/api/analyze/:sessionId', async (req, res) => {
   let { sessionId } = req.params;
@@ -504,9 +488,6 @@ app.get('/api/detailed-analysis/:sessionId', async (req, res) => {
 
 
 // Serve the uploaded files
-=======
-// Serve uploaded files
->>>>>>> 34992d5fa3dfb61cd7ac8a09e14914d6839558a5
 app.use('/uploads', express.static(uploadDir));
 
 // Start Server

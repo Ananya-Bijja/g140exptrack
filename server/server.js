@@ -131,8 +131,6 @@ app.get('/api/users', async (req, res) => {
     res.status(500).json({ message: 'Error fetching users', error: error.message });
   }
 });
-
-
 // Fetch game sessions for a user
 app.get('/api/game-sessions/:userId', async (req, res) => {
   let { userId } = req.params;

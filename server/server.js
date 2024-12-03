@@ -7,7 +7,6 @@ let path = require('path');
 let fs = require('fs');
 let app = express();
 let PORT = process.env.PORT || 5000;
-
 // MongoDB Connection
 mongoose.connect('mongodb+srv://Vinuthna:Vinnu2005@cluster0.uyw64.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
   useNewUrlParser: true,

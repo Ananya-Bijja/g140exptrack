@@ -40,6 +40,26 @@ const affirmationMessages = [
   'Awesome! Keep going!',
   "You're amazing!",
 ];
+const funFacts = [
+  { fact: "Did you know? A group of flamingos is called a 'flamboyance'! 🦩", emoji: "🦩" },
+  { fact: "Bananas are berries, but strawberries are not! 🍌🍓", emoji: "🍌🍓" },
+  { fact: "Honey never spoils! Archaeologists have found pots of honey in ancient tombs. 🍯", emoji: "🍯" },
+  { fact: "Elephants are the only animals that can't jump! 🐘", emoji: "🐘" },
+  { fact: "Did you know? Octopuses have three hearts! 🐙", emoji: "🐙" },
+  { fact: "Sloths can hold their breath longer than dolphins! 🦥", emoji: "🦥" },
+  { fact: "Cows have best friends and get stressed when they're separated! 🐄❤️", emoji: "🐄❤️" },
+  { fact: "A day on Venus is longer than a year on Venus! 🌍", emoji: "🌍" },
+  { fact: "Sharks existed before trees! 🦈🌳", emoji: "🦈🌳" },
+  { fact: "Wombat poop is cube-shaped! 🐾", emoji: "🐾" },
+  { fact: "The Eiffel Tower can be 15 cm taller during the summer due to thermal expansion. 🗼", emoji: "🗼" },
+  { fact: "Water makes different sounds depending on its temperature! 💧", emoji: "💧" },
+  { fact: "The longest hiccuping spree lasted 68 years! 😲", emoji: "😲" }
+];
+
+
+
+
+
 
 function WordPuzzleGame({ loggedInUsername }) {
 
@@ -69,6 +89,7 @@ function WordPuzzleGame({ loggedInUsername }) {
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [isWordFound, setIsWordFound] = useState(false);
+  const [funFact, setFunFact] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   let [audio] = useState(new Audio());  // State for the error message
   let gameContainerRef = useRef(null);
@@ -94,14 +115,38 @@ function WordPuzzleGame({ loggedInUsername }) {
     setShowConfetti(true);
   };
 
-  const speakText = (text) => {
+  // const speakText = (text) => {
+  //   return new Promise((resolve, reject) => {
+  //     const utterance = new SpeechSynthesisUtterance(text);
+  //     utterance.onend = resolve;
+  //     utterance.onerror = reject;
+  //     speechSynthesis.speak(utterance);
+  //   });
+  // };
+  const speakText = (text, accent = "en-IN") => {
     return new Promise((resolve, reject) => {
       const utterance = new SpeechSynthesisUtterance(text);
+  
+      // Fetch available voices
+      const voices = speechSynthesis.getVoices();
+  
+      // Find and set the desired voice based on accent (language)
+      const selectedVoice = voices.find(voice => voice.lang === accent);
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
+      } else {
+        console.warn(`Accent "${accent}" not found. Using default voice.`);
+      }
+  
+      // Event listeners for resolve and reject
       utterance.onend = resolve;
       utterance.onerror = reject;
+  
+      // Speak the text
       speechSynthesis.speak(utterance);
     });
   };
+  
 
   const playAffirmationMessage = useCallback(async () => {
     const randomMessage = affirmationMessages[Math.floor(Math.random() * affirmationMessages.length)];
@@ -124,7 +169,24 @@ function WordPuzzleGame({ loggedInUsername }) {
       console.error('Error speaking error message:', error);
     }
   }, []);
-
+  useEffect(() => {
+    const randomFunFact = funFacts[Math.floor(Math.random() * funFacts.length)];
+    setFunFact(randomFunFact);
+  
+    // Create a SpeechSynthesisUtterance with just the fact text (not the entire object)
+    const utterance = new SpeechSynthesisUtterance(randomFunFact.fact);
+  
+    // Optional: Set the voice/accent
+    const voices = speechSynthesis.getVoices();
+    const selectedVoice = voices.find(voice => voice.lang === 'en-IN'); // Adjust as needed
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+    }
+  
+    // Speak the fact
+    speechSynthesis.speak(utterance);
+  }, []);
+  
   /*const handleCellClick = (index) => {
     if (selectedLetters.length < 3 && !selectedLetters.includes(index)) {
       setSelectedLetters([...selectedLetters, index]);
@@ -261,68 +323,155 @@ function WordPuzzleGame({ loggedInUsername }) {
 
 
 
-  return (
-    <div className="app">
-      {showConfetti && <Confetti />} {/* Display confetti if game is finished */}
+//   return (
+//     <div className="app">
+//       {showConfetti && <Confetti />} {/* Display confetti if game is finished */}
 
-      <WebcamCapture loggedInUsername={loggedInUsername} isCameraActive={isCameraActive} gameSessionId={gameSessionId} takeGameScreenshot={takeGameScreenshot} />
-      {currentPuzzle === null ? (
-        <div id="splashScreen">
-          <h1>Welcome to the Word Puzzle Game</h1>
+//       <WebcamCapture loggedInUsername={loggedInUsername} isCameraActive={isCameraActive} gameSessionId={gameSessionId} takeGameScreenshot={takeGameScreenshot} />
+//       {currentPuzzle === null ? (
+//         <div id="splashScreen">
+//           <h1>Hey ${loggedInUsername} Welcome to the Word Puzzle Game</h1>
+//           <button onClick={handlePlayNow}>Play Now</button>
+//         </div>
+//       ) : !gameFinished ? (
+//         <>
+//           <div ref={gameContainerRef} id="gameContainer">
+//             <img
+//               id="puzzleImage"
+//               src={puzzles[currentPuzzle].image}
+//               alt="Puzzle"
+//             /> {/* Puzzle image */}
+//             <div id="puzzle">
+//               {puzzles[currentPuzzle].grid.map((letter, index) => (
+//                 <div
+//                   key={index}
+//                   className={`cell 
+//                     ${selectedLetters.includes(index) ? 'selected' : ''} 
+//                     ${
+//                       foundWords.has(puzzles[currentPuzzle].word) &&
+//                       selectedLetters.includes(index)
+//                         ? 'found'
+//                         : ''
+//                     }
+//                     ${isWrongWord && selectedLetters.includes(index) ? 'wrong' : ''}`}
+//                   onClick={() => handleCellClick(index)}
+//                 >
+//                   {letter}
+//                 </div>
+//               ))}
+//             </div>
+//             <div id="message">{message}</div>
+//             <div id="errorMessage">{errorMessage}</div> {/* Render the error message */}
+//             {currentPuzzle === puzzles.length - 1 ? (
+//               <button id="finishGameButton" onClick={handleFinishGame}>
+//                 Finish Game
+//               </button>
+//             ) : (
+//               <button id="nextPuzzleButton" onClick={handleNextPuzzle}>
+//                 Next Puzzle
+//               </button>
+//             )}
+//           </div>
+//         </>
+//       ) : (
+//         <div id="congratsScreen">
+//           <h1 className="congratsTitle">Congratulations! You have done a great job!</h1>
+//           <div className="scoreDisplay">
+//             <p>Your score: <span className="scoreNumber">{score}</span> / {puzzles.length}</p>
+//           </div>
+//           <p className="thankYouMessage">Thank you for playing!</p>
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
+
+
+// export default WordPuzzleGame;
+return (
+  <div className="app">
+    {showConfetti && <Confetti />} {/* Display confetti if game is finished */}
+
+    <WebcamCapture loggedInUsername={loggedInUsername} isCameraActive={isCameraActive} gameSessionId={gameSessionId} />
+
+    {currentPuzzle === null ? (
+      <div id="splashScreen">
+        <h1>
+  <span style={{ color: '#4caf50' }}></span>{' '}
+  <i
+    style={{
+      animation: 'colorChange 2s infinite', /* Color animation */
+    }}
+  >
+    Hey{' '}
+    <span className="username" style={{ color: 'lavender' }}>{loggedInUsername}</span>{' '}
+  </i>,{' '}
+  <span style={{ color: '#3f51b5' }}>Welcome to the Word Puzzle Game</span> 🎉
+</h1>
+
+        <div id="welcomeContainer">
+          {/* Play Now Button */}
           <button onClick={handlePlayNow}>Play Now</button>
-        </div>
-      ) : !gameFinished ? (
-        <>
-          <div ref={gameContainerRef} id="gameContainer">
-            <img
-              id="puzzleImage"
-              src={puzzles[currentPuzzle].image}
-              alt="Puzzle"
-            /> {/* Puzzle image */}
-            <div id="puzzle">
-              {puzzles[currentPuzzle].grid.map((letter, index) => (
-                <div
-                  key={index}
-                  className={`cell 
-                    ${selectedLetters.includes(index) ? 'selected' : ''} 
-                    ${
-                      foundWords.has(puzzles[currentPuzzle].word) &&
-                      selectedLetters.includes(index)
-                        ? 'found'
-                        : ''
-                    }
-                    ${isWrongWord && selectedLetters.includes(index) ? 'wrong' : ''}`}
-                  onClick={() => handleCellClick(index)}
-                >
-                  {letter}
-                </div>
-              ))}
-            </div>
-            <div id="message">{message}</div>
-            <div id="errorMessage">{errorMessage}</div> {/* Render the error message */}
-            {currentPuzzle === puzzles.length - 1 ? (
-              <button id="finishGameButton" onClick={handleFinishGame}>
-                Finish Game
-              </button>
-            ) : (
-              <button id="nextPuzzleButton" onClick={handleNextPuzzle}>
-                Next Puzzle
-              </button>
-            )}
-          </div>
-        </>
-      ) : (
-        <div id="congratsScreen">
-          <h1 className="congratsTitle">Congratulations! You have done a great job!</h1>
-          <div className="scoreDisplay">
-            <p>Your score: <span className="scoreNumber">{score}</span> / {puzzles.length}</p>
-          </div>
-          <p className="thankYouMessage">Thank you for playing!</p>
-        </div>
-      )}
-    </div>
-  );
-}
 
+          {/* Fun fact box below Play Now */}
+          <div className="funFactBox">
+        <div className="funFactHeading">FUN FACT:</div>
+        <p>{funFact.fact}</p>
+      </div>
+    </div>
+  </div>
+
+    ) : !gameFinished ? (
+      <>
+        <div ref={gameContainerRef} id="gameContainer">
+          <img
+            id="puzzleImage"
+            src={puzzles[currentPuzzle].image}
+            alt="Puzzle"
+          />
+          <div id="puzzle">
+            {puzzles[currentPuzzle].grid.map((letter, index) => (
+              <div
+                key={index}
+                className={`cell 
+                  ${selectedLetters.includes(index) ? 'selected' : ''} 
+                  ${
+                    foundWords.has(puzzles[currentPuzzle].word) &&
+                    selectedLetters.includes(index)
+                      ? 'found'
+                      : ''
+                  }
+                  ${isWrongWord && selectedLetters.includes(index) ? 'wrong' : ''}`}
+                onClick={() => handleCellClick(index)}
+              >
+                {letter}
+              </div>
+            ))}
+          </div>
+          <div id="message">{message}</div>
+          <div id="errorMessage">{errorMessage}</div> {/* Render the error message */}
+          {currentPuzzle === puzzles.length - 1 ? (
+            <button id="finishGameButton" onClick={handleFinishGame}>
+              Finish Game
+            </button>
+          ) : (
+            <button id="nextPuzzleButton" onClick={handleNextPuzzle}>
+              Next Puzzle
+            </button>
+          )}
+        </div>
+      </>
+    ) : (
+      <div id="congratsScreen">
+        <h1 className="congratsTitle">Congratulations! You have done a great job!</h1>
+        <div className="scoreDisplay">
+          <p>Your score: <span className="scoreNumber">{score}</span> / {puzzles.length}</p>
+        </div>
+        <p className="thankYouMessage">Thank you for playing!</p>
+      </div>
+    )}
+  </div>
+);
+}
 
 export default WordPuzzleGame;

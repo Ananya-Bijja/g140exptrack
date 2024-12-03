@@ -33,7 +33,6 @@ const AdminDashboard = () => {
   };
 
   const handleViewAnalysis = async(username,sessionId) => {
-
     try {
       const response = await axios.post(`http://localhost:5000/api/analyze/${sessionId}`, { username });
       alert(`Analysis complete: ${JSON.stringify(response.data.result)}`);
@@ -41,9 +40,6 @@ const AdminDashboard = () => {
     } catch (error) {
       console.error('Error analyzing session:', error);
     }
-
-   
-    
   };
 
   return (
@@ -85,5 +81,4 @@ const AdminDashboard = () => {
     </div>
   );
 };
-
 export default AdminDashboard;

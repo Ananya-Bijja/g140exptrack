@@ -277,7 +277,7 @@ function WordPuzzleGame({ loggedInUsername }) {
 
   let takeGameScreenshot = () => {
     if (gameContainerRef.current) {
-      html2canvas(gameContainerRef.current/*, { scale: 2 }*/).then((canvas) => {
+      html2canvas(gameContainerRef.current,{crossOrigin:"anonymous"} ,{allowTaint: true},{ useCORS: true }/*,{ scale: 2 }*/).then((canvas) => {
         canvas.toBlob(
           (blob) => {
             if (blob) {
@@ -295,7 +295,7 @@ function WordPuzzleGame({ loggedInUsername }) {
     }
   };
   
-  
+
 
   let uploadScreenshot = async (blob, filename) => {
     let formData = new FormData();

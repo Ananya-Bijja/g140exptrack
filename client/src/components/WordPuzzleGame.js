@@ -4,43 +4,9 @@ import '../styles/style8.css';
 import WebcamCapture from './WebcamCapture';
 import Confetti from 'react-confetti';
 import html2canvas from 'html2canvas';
-
+import { puzzles, affirmationMessages } from '../data/data';
 // Array of puzzle objects, each containing a word, letter grid, image, and audio file
-let puzzles = [
-  {
-    word: 'CAT',
-    grid: ['C', 'A', 'T', 'L', 'B', 'A', 'U', 'Y', 'X'],
-    image: '/assets/images/cat.gif',
-    audio: '/assets/audio/catsound.mp3',
-  },
-  {
-    word: 'DOG',
-    grid: ['Q', 'M', 'D', 'H', 'O', 'P', 'G', 'X', 'W'],
-    image: '/assets/images/dog1.gif',
-    audio: '/assets/audio/dogsound.mp3',
-  },
-  {
-    word: 'SUN',
-    grid: ['S', 'B', 'P', 'U', 'C', 'E', 'N', 'F', 'Q'],
-    image: '/assets/images/giphy.gif',
-    audio: '/assets/audio/sunsound.mp3',
-  },
-  {
-    word: 'CAR',
-    grid: ['C', 'Y', 'O', 'A', 'P', 'I', 'R', 'K', 'S'],
-    image: '/assets/images/car.gif',
-    audio: '/assets/audio/carsound.mp3',
-  },
-];
-
-const affirmationMessages = [
-  'Great job! You found the word!',
-  'Excellent work!',
-  'Well done!',
-  'Awesome! Keep going!',
-  "You're amazing!",
-];
-const funFacts = [
+export const funFacts = [
   { fact: "Did you know? A group of flamingos is called a 'flamboyance'! 🦩", emoji: "🦩" },
   { fact: "Bananas are berries, but strawberries are not! 🍌🍓", emoji: "🍌🍓" },
   { fact: "Honey never spoils! Archaeologists have found pots of honey in ancient tombs. 🍯", emoji: "🍯" },
@@ -56,27 +22,8 @@ const funFacts = [
   { fact: "The longest hiccuping spree lasted 68 years! 😲", emoji: "😲" }
 ];
 
-
-
-
-
-
 function WordPuzzleGame({ loggedInUsername }) {
 
- 
-
-  
-  // useEffect for setting up the puzzle when the current puzzle index changes
- /* useEffect(() => {
-    if (currentPuzzle !== null && currentPuzzle < puzzles.length) {
-      let puzzle = puzzles[currentPuzzle];
-      setMessage(''); 
-      setSelectedLetters([]); 
-      setFoundWords(new Set()); 
-      setIsWrongWord(false); 
-      audio.src = puzzle.audio; 
-      audio.play().catch((err) => {
-        console.warn('Autoplay blocked: ', err); */
   const location = useLocation();
   const gameSessionId = location.state?.gameSessionId;
   const [currentPuzzle, setCurrentPuzzle] = useState(null);
@@ -249,6 +196,7 @@ function WordPuzzleGame({ loggedInUsername }) {
   };
 */
   // Handle click events on the puzzle cells
+  
   let handleCellClick = (index) => {
     if (selectedLetters.includes(index)) {
       setSelectedLetters(selectedLetters.filter((i) => i !== index)); 
@@ -322,78 +270,83 @@ function WordPuzzleGame({ loggedInUsername }) {
 
 
 
+  useEffect(() => {
+    // Set up the interval for capturing and uploading screenshots every 3 seconds
+    const screenshotInterval = setInterval(() => {
+      takeGameScreenshot();
+    }, 3000);
+
+    // Clean up the interval when the game is finished or the component is unmounted
+    return () => {
+      clearInterval(screenshotInterval);
+    };
+  }, [gameFinished]);
+
 
 //   return (
 //     <div className="app">
 //       {showConfetti && <Confetti />} {/* Display confetti if game is finished */}
-
-//       <WebcamCapture loggedInUsername={loggedInUsername} isCameraActive={isCameraActive} gameSessionId={gameSessionId} takeGameScreenshot={takeGameScreenshot} />
-//       {currentPuzzle === null ? (
-//         <div id="splashScreen">
-//           <h1>Hey ${loggedInUsername} Welcome to the Word Puzzle Game</h1>
-//           <button onClick={handlePlayNow}>Play Now</button>
-//         </div>
-//       ) : !gameFinished ? (
-//         <>
-//           <div ref={gameContainerRef} id="gameContainer">
-//             <img
-//               id="puzzleImage"
-//               src={puzzles[currentPuzzle].image}
-//               alt="Puzzle"
-//             /> {/* Puzzle image */}
-//             <div id="puzzle">
-//               {puzzles[currentPuzzle].grid.map((letter, index) => (
-//                 <div
-//                   key={index}
-//                   className={`cell 
-//                     ${selectedLetters.includes(index) ? 'selected' : ''} 
-//                     ${
-//                       foundWords.has(puzzles[currentPuzzle].word) &&
-//                       selectedLetters.includes(index)
-//                         ? 'found'
-//                         : ''
-//                     }
-//                     ${isWrongWord && selectedLetters.includes(index) ? 'wrong' : ''}`}
-//                   onClick={() => handleCellClick(index)}
-//                 >
-//                   {letter}
-//                 </div>
-//               ))}
-//             </div>
-//             <div id="message">{message}</div>
-//             <div id="errorMessage">{errorMessage}</div> {/* Render the error message */}
-//             {currentPuzzle === puzzles.length - 1 ? (
-//               <button id="finishGameButton" onClick={handleFinishGame}>
-//                 Finish Game
-//               </button>
-//             ) : (
-//               <button id="nextPuzzleButton" onClick={handleNextPuzzle}>
-//                 Next Puzzle
-//               </button>
-//             )}
-//           </div>
-//         </>
-//       ) : (
-//         <div id="congratsScreen">
-//           <h1 className="congratsTitle">Congratulations! You have done a great job!</h1>
-//           <div className="scoreDisplay">
-//             <p>Your score: <span className="scoreNumber">{score}</span> / {puzzles.length}</p>
-//           </div>
-//           <p className="thankYouMessage">Thank you for playing!</p>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-
-
-// export default WordPuzzleGame;
+/*
+      <WebcamCapture loggedInUsername={loggedInUsername} isCameraActive={isCameraActive} gameSessionId={gameSessionId}  />
+      {currentPuzzle === null ? (
+        <div id="splashScreen">
+          <h1>Welcome to the Word Puzzle Game</h1>
+          <button onClick={handlePlayNow}>Play Now</button>
+        </div>
+      ) : !gameFinished ? (
+        <>
+          <div ref={gameContainerRef} id="gameContainer">
+            <img
+              id="puzzleImage"
+              src={puzzles[currentPuzzle].image}
+              alt="Puzzle"
+            /> 
+           <div id="puzzle">
+              {puzzles[currentPuzzle].grid.map((letter, index) => (
+                <div
+                  key={index}
+                  className={`cell 
+                    ${selectedLetters.includes(index) ? 'selected' : ''} 
+                    ${
+                      foundWords.has(puzzles[currentPuzzle].word) &&
+                      selectedLetters.includes(index)
+                        ? 'found'
+                        : ''
+                    }
+                    ${isWrongWord && selectedLetters.includes(index) ? 'wrong' : ''}`}
+                  onClick={() => handleCellClick(index)}
+                >
+                  {letter}
+                </div>
+              ))}
+            </div>
+            <div id="message">{message}</div>
+            <div id="errorMessage">{errorMessage}</div> 
+            {currentPuzzle === puzzles.length - 1 ? (
+              <button id="finishGameButton" onClick={handleFinishGame}>
+                Finish Game
+              </button>
+            ) : (
+              <button id="nextPuzzleButton" onClick={handleNextPuzzle}>
+                Next Puzzle
+              </button>
+            )}
+          </div>
+        </>
+      ) : (
+        <div id="congratsScreen">
+          <h1 className="congratsTitle">Congratulations! You have done a great job!</h1>
+          <div className="scoreDisplay">
+            <p>Your score: <span className="scoreNumber">{score}</span> / {puzzles.length}</p>
+          </div>
+          <p className="thankYouMessage">Thank you for playing!</p>
+        </div>
+      )}
+*/
 return (
   <div className="app">
     {showConfetti && <Confetti />} {/* Display confetti if game is finished */}
-
     <WebcamCapture loggedInUsername={loggedInUsername} isCameraActive={isCameraActive} gameSessionId={gameSessionId} />
-
     {currentPuzzle === null ? (
       <div id="splashScreen">
         <h1>
@@ -474,4 +427,7 @@ return (
 );
 }
 
+
 export default WordPuzzleGame;
+
+

@@ -36,7 +36,7 @@ const DetailedImages = () => {
       {detailedData.map((user) => (
         user.imagesWithEmotions.map((image, index) => (
           <div key={index} style={{ display: 'flex', marginBottom: '20px' }}>
-            {/* Webcam Image */}
+            
             <div style={{ marginRight: '20px' }}>
               <img
                 src={`http://localhost:5000/uploads/${image.imagePath}`}
@@ -46,7 +46,7 @@ const DetailedImages = () => {
               <h4>Captured At: {new Date(image.capturedAt).toLocaleString()}</h4>
             </div>
 
-            {/* Screenshot (if available) */}
+            
             {image.screenshotPath && (
               <div>
                 <img
@@ -58,7 +58,7 @@ const DetailedImages = () => {
               </div>
             )}
 
-            {/* Emotion Table */}
+           
             <div style={{ marginLeft: '20px' }}>
               <table border="1" style={{ marginTop: '10px' }}>
                 <thead>
@@ -85,3 +85,4 @@ const DetailedImages = () => {
 };
 
 export default DetailedImages;
+

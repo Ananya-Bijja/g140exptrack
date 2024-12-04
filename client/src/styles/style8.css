@@ -54,14 +54,20 @@ body, html {
 
 /* Game Container Styles */
 #gameContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers all content horizontally */
+  justify-content: flex-start; /* Keeps the image and grid aligned vertically */
+  text-align: center;
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  max-width: 90%; /* Ensures it fits within screen size */
-  margin: 20px auto; /* Centers the content */
-  overflow: hidden; /* Prevents overflow */
+  max-width: 90%;
+  margin: 20px auto;
+  overflow: hidden;
 }
+
 
 /* Puzzle Image Styles */
 #puzzleImage {
@@ -74,13 +80,17 @@ body, html {
 /* Puzzle Grid Styles */
 #puzzle {
   display: grid;
-  grid-template-columns: repeat(3, 100px); /* Keeps the puzzle grid fixed at 3 columns */
-  grid-gap: 10px;
-  justify-content: center;
-  margin-top: 20px;
-  width: 100%;
+  grid-template-columns: repeat(3, 1fr); /* Always 3 equal columns */
+  grid-auto-rows: 1fr; /* Ensures uniform row heights */
+  gap: 10px;
+  justify-content: center; /* Centers the grid horizontally */
+  align-items: center; /* Centers the grid vertically */
+  width: min(90vw, 300px); /* Responsive width, max 300px */
+  height: auto; /* Let the height adjust based on content */
+  margin: 20px auto; /* Centers the grid within its container */
   box-sizing: border-box;
 }
+
 
 /* Puzzle Cell Styles */
 .cell {

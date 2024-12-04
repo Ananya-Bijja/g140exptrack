@@ -113,8 +113,9 @@ const SignUpPage = () => {
           placeholder="Confirm your password"  // Added placeholder
           required
         />
-
+  <p> Note⚠️: If you are an admin, make sure to end your username with "@admin" </p>
         <button type="submit">Sign Up</button>
+        
       </form>
     </div>
   );

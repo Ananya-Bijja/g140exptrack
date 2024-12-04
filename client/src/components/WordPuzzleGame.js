@@ -4,23 +4,9 @@ import '../styles/style8.css';
 import WebcamCapture from './WebcamCapture';
 import Confetti from 'react-confetti';
 import html2canvas from 'html2canvas';
-import { puzzles, affirmationMessages } from '../data/data';
+import { puzzles, affirmationMessages,funFacts } from '../data/data';
 // Array of puzzle objects, each containing a word, letter grid, image, and audio file
-export const funFacts = [
-  { fact: "Did you know? A group of flamingos is called a 'flamboyance'! 🦩", emoji: "🦩" },
-  { fact: "Bananas are berries, but strawberries are not! 🍌🍓", emoji: "🍌🍓" },
-  { fact: "Honey never spoils! Archaeologists have found pots of honey in ancient tombs. 🍯", emoji: "🍯" },
-  { fact: "Elephants are the only animals that can't jump! 🐘", emoji: "🐘" },
-  { fact: "Did you know? Octopuses have three hearts! 🐙", emoji: "🐙" },
-  { fact: "Sloths can hold their breath longer than dolphins! 🦥", emoji: "🦥" },
-  { fact: "Cows have best friends and get stressed when they're separated! 🐄❤️", emoji: "🐄❤️" },
-  { fact: "A day on Venus is longer than a year on Venus! 🌍", emoji: "🌍" },
-  { fact: "Sharks existed before trees! 🦈🌳", emoji: "🦈🌳" },
-  { fact: "Wombat poop is cube-shaped! 🐾", emoji: "🐾" },
-  { fact: "The Eiffel Tower can be 15 cm taller during the summer due to thermal expansion. 🗼", emoji: "🗼" },
-  { fact: "Water makes different sounds depending on its temperature! 💧", emoji: "💧" },
-  { fact: "The longest hiccuping spree lasted 68 years! 😲", emoji: "😲" }
-];
+
 
 function WordPuzzleGame({ loggedInUsername }) {
 
@@ -364,12 +350,20 @@ return (
 
         <div id="welcomeContainer">
           {/* Play Now Button */}
+          <div id="instructions">
+      <h2>How to Play</h2>
+      <ul>
+      <li>Select letters to form a word.</li>
+        <li>Find the hidden word in the puzzle grid.</li>
+        <li>Earn points for correct answers!</li>
+      </ul>
+    </div>
           <button onClick={handlePlayNow}>Play Now</button>
 
           {/* Fun fact box below Play Now */}
           <div className="funFactBox">
-        <div className="funFactHeading">FUN FACT:</div>
-        <p>{funFact.fact}</p>
+        
+        <p>Fun Fact: {funFact.fact}</p>
       </div>
     </div>
   </div>

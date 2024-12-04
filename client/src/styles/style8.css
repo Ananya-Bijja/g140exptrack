@@ -280,30 +280,10 @@ button:hover {
 }
 
 /* Fun Fact Box Design for Dyslexic Kids */
-.funFactBox {
-  background-color: #e3f2fd; /* Pastel blue background for better contrast */
-  border: 2px solid #2196f3; /* Bright blue border for emphasis */
-  padding: 25px;
-  margin-top: 30px;
-  border-radius: 12px; /* Rounded corners for a friendly look */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  font-size: 20px; /* Larger text size for readability */
-  max-width: 400px;
-  width: 100%;
-  color: #212121; /* Dark text color for high contrast */
-  font-family: 'Comic Sans MS', sans-serif; /* Dyslexia-friendly font */
-  text-align: left; /* Left-aligned text for better reading flow */
-}
 
-.funFactHeading {
-  font-size: 24px;
-  font-weight: bold;
-  color: #2196f3; /* Blue color for the heading */
-  margin-bottom: 15px;
-}
 
 .funFactBox p {
-  line-height: 1.6; /* Increase line spacing for clarity */
+  line-height: 5; /* Increase line spacing for clarity */
   font-size: 18px;
   color: #333333; /* Dark text for high contrast */
 }
@@ -341,4 +321,18 @@ button {
 
 button:hover {
   background-color: #45a049;
+}
+
+#instructions {
+  margin-top: 20px;
+  color: #333;
+  font-size: 1.2em;
+  line-height: 1.5;
+}
+
+#instructions h2 {
+  padding-left: 10;
+  padding-bottom: 100;
+  margin-bottom: 10px;
+  color: #4caf50;
 }

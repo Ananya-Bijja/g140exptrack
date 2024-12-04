@@ -1,0 +1,123 @@
+/* Admin Dashboard Container */
+.admin-dashboard {
+  padding: 20px;
+  text-align: center;
+}
+
+/* Search Container */
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-container input[type="text"] {
+  padding: 8px;
+  font-size: 16px;
+  width: 100%;
+  max-width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.search-container .search-button {
+  padding: 8px 16px;
+  font-size: 16px;
+  background-color: #a3c7d7;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.search-container .search-button:hover {
+  background-color: #90b6c8;
+}
+
+/* User Container */
+.user-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* User Card */
+.user-card {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  margin: 10px 0;
+  width: 115%;
+  max-width: 700px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Username and Button in One Line */
+.user-card .user-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.user-card .user-info .username {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* Buttons */
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #a3c7d7;
+  color: white;
+}
+
+button:hover {
+  background-color: #90b6c8;
+}
+
+/* Sessions Container */
+.sessions-container {
+  padding: 20px;
+  margin-top: 15px;
+  background-color: #f1f1f1;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Back Button */
+.back-button {
+  margin-bottom: 20px;
+}
+
+/* Session Date and View Analysis Button Layout */
+.session-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.session-date {
+  text-align: left;
+}
+
+.view-analysis-button {
+  text-align: right;
+  background-color: #90b6c8;
+}
+
+.view-analysis-button:hover {
+  background-color: #75a1b0;
+}
+

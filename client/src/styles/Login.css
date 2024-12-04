@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-image: url('..//..//public/assets/images/Screenshot\ \(122\).png'); /* Set your background image path here */
+  background-image: url('..//..//public/assets/images/clouds_background.jpg'); /* Set your background image path here */
   background-size: cover; /* Make the background cover the entire container */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Prevent the image from repeating */
@@ -62,7 +62,7 @@
 .btn-submit {
   width: 100%;
   padding: 12px;
-  background-color: #4caf50;
+  background-color: #85bbd2;
   border: none;
   border-radius: 4px;
   color: white;
@@ -70,7 +70,7 @@
 }
 
 .btn-submit:hover {
-  background-color: #45a049;
+  background-color: #a3c7d7;
 }
 
 .error {

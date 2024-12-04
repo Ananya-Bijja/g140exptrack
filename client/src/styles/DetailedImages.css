@@ -1,0 +1,52 @@
+/* Detailed Analysis Table */
+.detailed-analysis-table {
+  width: 80%;
+  margin: 20px auto; /* Center the table horizontally */
+  border-collapse: collapse;
+  border: 1px solid transparent; /* Transparent border */
+  background-color: transparent;
+}
+
+.detailed-analysis-table th,
+.detailed-analysis-table td {
+  padding: 15px;
+  text-align: center;
+  border: 1px solid transparent; /* Transparent border for cells */
+}
+
+.detailed-analysis-table th {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.detailed-analysis-table td {
+  font-size: 16px;
+}
+
+/* Image Styling */
+.image {
+  width: 150px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.screenshot {
+  width: 150px;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Emotions List */
+table td ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+table td ul li {
+  margin-bottom: 5px;
+}
+
+table td ul li strong {
+  font-weight: bold;
+}

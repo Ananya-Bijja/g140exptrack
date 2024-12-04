@@ -2,11 +2,11 @@ body, html {
   height: 100%;
   margin: 0;
   font-family: Arial, sans-serif;
-  /* background-image: url('../../public/assets/images/Screenshot (122).png');
+  background-image: url('../../public/assets/images/Screenshot (122).png');
   background-size: cover;
   background-position: center;
-  background-attachment: fixed; */
-   /* Keeps the background fixed as you scroll */
+  background-attachment: fixed;
+   /* Keeps the background fixed as you scroll*/
 } 
 /* Main Application Container */
 .app {

@@ -1,0 +1,77 @@
+
+.about-container {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    color: #333;
+    line-height: 1.6;
+    background-image: url("../../public/assets/images/home_background.png"); /* Path to your image */
+  background-size: cover;   /* Make sure the image covers the entire area */
+  background-position: center; /* Center the image */
+  background-attachment: fixed; /* Keep the background fixed when scrolling */
+  min-height: 100vh; /* Full height */
+  }
+  
+  .about-hero {
+    text-align: center;
+    padding: 30px 20px;
+    
+  }
+  
+  .about-hero h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+  }
+  
+  .about-hero p {
+    font-size: 1.5rem;
+    color: #666;
+  }
+  
+  .about-intro,
+  .about-mission-vision,
+  .about-story,
+  .about-how-it-works,
+  .about-cta {
+    margin: 40px 0;
+    padding: 20px;
+    
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .about-intro h2,
+  .about-mission-vision h2,
+  .about-story h2,
+  .about-how-it-works h2,
+  .about-cta h2 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: #222;
+  }
+  
+  .about-intro p,
+  .about-mission-vision p,
+  .about-story p,
+  .about-how-it-works p {
+    font-size: 1.2rem;
+  }
+  
+  .about-cta {
+    text-align: center;
+  }
+  
+  .cta-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    transition: background-color 0.3s;
+  }
+  
+  .cta-button:hover {
+    background-color: #0056b3;
+  }
+  

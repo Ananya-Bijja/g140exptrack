@@ -1,7 +1,42 @@
-/* Admin Dashboard Container */
-.admin-dashboard {
-  padding: 20px;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+/* Base Styles */
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #f0f4f8;
+}
+
+h2 {
   text-align: center;
+  color: #333;
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #2a3d4d;
+  font-weight: 'bold';
+  font-size: 5rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  /*border-bottom: 4px solid #90b6c8;*/
+}
+
+/* Admin Dashboard */
+.admin-dashboard {
+  min-height: 100vh;
+  padding: 20px;
+  background: url("../../public/assets/images/clouds_background.jpg") no-repeat center center fixed;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
 /* Search Container */
@@ -10,26 +45,27 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
+  gap: 10px;
 }
 
 .search-container input[type="text"] {
-  padding: 8px;
+  padding: 12px;
   font-size: 16px;
   width: 100%;
-  max-width: 300px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-right: 10px;
+  max-width: 350px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
 }
 
 .search-container .search-button {
-  padding: 8px 16px;
+  padding: 12px 20px;
   font-size: 16px;
-  background-color: #a3c7d7;
+  background-color: #90b6c8;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .search-container .search-button:hover {
@@ -45,59 +81,94 @@
 
 /* User Card */
 .user-card {
+  background-color: rgba(255, 255, 255, 0.9);
+  margin: 15px;
+  padding: 20px;
+  border-radius: 12px;
+  width: 700px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
-  padding: 15px;
-  margin: 10px 0;
-  width: 115%;
-  max-width: 700px;
-  background-color: #f9f9f9;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Username and Button in One Line */
+.user-card:hover {
+  transform: scale(1.05);
+}
+
 .user-card .user-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .user-card .user-info .username {
-  font-weight: bold;
-  font-size: 18px;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #444;
 }
 
 /* Buttons */
 button {
-  padding: 10px 20px;
+  padding: 12px 24px;
   font-size: 16px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  background-color: #a3c7d7;
+  background-color: #90b6c8;
   color: white;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 button:hover {
   background-color: #90b6c8;
+  transform: scale(1.05);
 }
 
 /* Sessions Container */
 .sessions-container {
   padding: 20px;
   margin-top: 15px;
-  background-color: #f1f1f1;
+  background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.sessions-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sessions-container li {
+  margin-bottom: 12px;
+}
+
+.sessions-container .session-time {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
 /* Back Button */
 .back-button {
-  margin-bottom: 20px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 12px;
+  margin-top: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #c82333;
+  transform: scale(1.05);
 }
 
 /* Session Date and View Analysis Button Layout */
@@ -115,9 +186,75 @@ button:hover {
 .view-analysis-button {
   text-align: right;
   background-color: #90b6c8;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .view-analysis-button:hover {
   background-color: #75a1b0;
+  transform: scale(1.05);
 }
 
+/* Responsive Design */
+@media (max-width: 768px) {
+  /* Ensure elements are responsive on smaller screens */
+  .admin-dashboard {
+    padding: 15px;
+  }
+
+  .user-card {
+    width: 100%;
+    margin: 10px 0;
+  }
+
+  .search-container input[type="text"] {
+    width: 80%;
+  }
+
+  .search-container .search-button {
+    width: auto;
+  }
+
+  .sessions-container {
+    padding: 15px;
+  }
+
+  .session-details {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .view-analysis-button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .back-button {
+    width: 100%;
+  }
+
+  .user-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .user-info .username {
+    margin-bottom: 10px;
+  }
+
+  .search-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-container input[type="text"] {
+    margin-bottom: 10px;
+  }
+
+  .search-container .search-button {
+    width: 100%;
+  }
+}

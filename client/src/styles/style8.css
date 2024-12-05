@@ -269,7 +269,8 @@ button:hover {
 .username {
   color: lavender; /* Default color */
   font-weight: bold;
-  animation: colorChange 2s infinite; /* Apply color animation */
+  color: #000;
+  /* Apply color animation */
 }
 
 /* #welcomeContainer {
@@ -328,7 +329,7 @@ button:hover {
 
 /* Button Styling */
 button {
-  background-color: #4CAF50;
+  background-color:  #90b6c8;
   color: white;
   padding: 15px 25px;
   border: none;
@@ -339,27 +340,14 @@ button {
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #75a1b0;
 }
 
 
 
 
 
-button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  margin-top: 20px;
-}
 
-button:hover {
-  background-color: #45a049;
-}
 
 #instructions {
   margin-top: 20px;

@@ -95,7 +95,7 @@ let WebcamCapture = ({ loggedInUsername,isCameraActive }) => {
 };
 
 export default WebcamCapture;*/
-/*
+
 import React, { useState, useEffect, useRef } from 'react';
 
 let WebcamCapture = ({ loggedInUsername, gameSessionId, isCameraActive }) => {
@@ -107,6 +107,7 @@ let WebcamCapture = ({ loggedInUsername, gameSessionId, isCameraActive }) => {
     formData.append('file', imageBlob, 'webcam_image.jpg');
     formData.append('username', loggedInUsername); 
     formData.append('gameSessionId', gameSessionId); // Include the game session ID
+    formData.append('type', 'image');
 
     try {
       let uploadResponse = await fetch('http://localhost:5000/upload', {
@@ -192,8 +193,8 @@ let WebcamCapture = ({ loggedInUsername, gameSessionId, isCameraActive }) => {
 };
 
 export default WebcamCapture;
-*/
 
+/*
 import React, { useState, useEffect, useRef } from 'react';
 
 let WebcamCapture = ({ loggedInUsername, gameSessionId, isCameraActive, takeGameScreenshot }) => {
@@ -246,12 +247,12 @@ let WebcamCapture = ({ loggedInUsername, gameSessionId, isCameraActive, takeGame
     }
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     // Start capturing screenshots every 3 seconds
-    const interval = setInterval(takeGameScreenshot, 3000);
+    const interval = setInterval(captureImage, 3000);
     return () => clearInterval(interval); // Cleanup interval on component unmount
-  }, []);
-
+  }, []);*/
+/*
   useEffect(() => {
     let setupCamera = async () => {
       if (isCameraActive) {
@@ -298,3 +299,102 @@ let WebcamCapture = ({ loggedInUsername, gameSessionId, isCameraActive, takeGame
 };
 
 export default WebcamCapture;
+*/
+/*
+import React, { useEffect, useRef } from 'react';
+import '../styles/style8.css';
+
+function WebcamCapture({ loggedInUsername, isCameraActive, gameSessionId }) {
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    if (isCameraActive) {
+      // Access webcam stream
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((stream) => {
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        })
+        .catch((err) => {
+          console.error('Error accessing webcam:', err);
+        });
+
+      return () => {
+        if (videoRef.current && videoRef.current.srcObject) {
+          const stream = videoRef.current.srcObject;
+          const tracks = stream.getTracks();
+          tracks.forEach((track) => track.stop());
+        }
+      };
+    }
+  }, [isCameraActive]);
+
+  const captureWebcamImage = async () => {
+    if (videoRef.current && canvasRef.current) {
+      const context = canvasRef.current.getContext('2d');
+      const videoWidth = videoRef.current.videoWidth;
+      const videoHeight = videoRef.current.videoHeight;
+
+      // Set canvas size to match video
+      canvasRef.current.width = videoWidth;
+      canvasRef.current.height = videoHeight;
+
+      // Draw the video frame on the canvas
+      context.drawImage(videoRef.current, 0, 0, videoWidth, videoHeight);
+
+      const blob = await new Promise((resolve) => {
+        canvasRef.current.toBlob(resolve, 'image/jpeg');
+      });
+
+      if (blob) {
+        uploadWebcamImage(blob);
+      } else {
+        console.error('Failed to capture image from webcam');
+      }
+    }
+  };
+
+  const uploadWebcamImage = async (blob) => {
+    const formData = new FormData();
+    formData.append('file', blob, 'webcam_image.jpg');
+    formData.append('username', loggedInUsername);
+    formData.append('gameSessionId', gameSessionId);
+    formData.append('type', 'webcam');
+
+    try {
+      const response = await fetch('http://localhost:5000/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to upload webcam image: ' + (await response.text()));
+      }
+
+      const data = await response.json();
+      console.log('Webcam image uploaded:', data);
+    } catch (error) {
+      console.error('Error uploading webcam image:', error);
+    }
+  };
+
+  return (
+    <div id="webcamCapture">
+      {isCameraActive ? (
+        <>
+          <video ref={videoRef} autoPlay muted width="640" height="480"></video>
+          <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+          <button onClick={captureWebcamImage}>Capture Webcam Image</button>
+        </>
+      ) : (
+        <p>Webcam is not active</p>
+      )}
+    </div>
+  );
+}
+
+export default WebcamCapture;
+*/

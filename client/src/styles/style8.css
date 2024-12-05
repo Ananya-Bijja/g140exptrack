@@ -1,4 +1,3 @@
-/* General Body and HTML Styles */
 body, html {
   height: 100%;
   margin: 0;
@@ -55,13 +54,18 @@ body, html {
 
 /* Game Container Styles */
 #gameContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers all content horizontally */
+  justify-content: flex-start; /* Keeps the image and grid aligned vertically */
+  text-align: center;
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  max-width: 90%; /* Ensures it fits within screen size */
-  margin: 20px auto; /* Centers the content */
-  overflow: hidden; /* Prevents overflow */
+  max-width: 90%;
+  margin: 20px auto;
+  overflow: hidden;
 }
 
 /* Puzzle Image Styles */
@@ -75,11 +79,14 @@ body, html {
 /* Puzzle Grid Styles */
 #puzzle {
   display: grid;
-  grid-template-columns: repeat(3, 100px); /* Keeps the puzzle grid fixed at 3 columns */
-  grid-gap: 10px;
-  justify-content: center;
-  margin-top: 20px;
-  width: 100%;
+  grid-template-columns: repeat(3, 1fr); /* Always 3 equal columns */
+  grid-auto-rows: 1fr; /* Ensures uniform row heights */
+  gap: 10px;
+  justify-content: center; /* Centers the grid horizontally */
+  align-items: center; /* Centers the grid vertically */
+  width: min(90vw, 300px); /* Responsive width, max 300px */
+  height: auto; /* Let the height adjust based on content */
+  margin: 20px auto; /* Centers the grid within its container */
   box-sizing: border-box;
 }
 
@@ -246,4 +253,124 @@ button:hover {
     opacity: 1;
     transform: translateY(0);
   }
+}
+@keyframes colorChange {
+  0% { color: lavender; }
+  16% { color: #ff5722; }  /* Red-Orange */
+  32% { color: #4caf50; }  /* Green */
+  48% { color: #3f51b5; }  /* Blue */
+  64% { color: #ffc107; }  /* Amber */
+  80% { color: #e91e63; }  /* Pink */
+  100% { color: lavender; } /* Back to Lavender */
+}
+
+
+/* Optional: If you want to apply to specific element */
+.username {
+  color: lavender; /* Default color */
+  font-weight: bold;
+  animation: colorChange 2s infinite; /* Apply color animation */
+}
+
+/* #welcomeContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#instructionsBox {
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  max-width: 300px;
+  background-color: #f9f9f9;
+}
+
+#instructionsBox h2 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+}
+
+#instructionsBox ul {
+  list-style-type: disc;
+  margin-left: 20px;
+  font-size: 14px;
+}
+
+#splashScreen h1 {
+  text-align: center;
+  color: #333;
+}
+
+#splashScreen button {
+  margin: 20px auto;
+  display: block;
+}
+ */
+ #splashScreen {
+  text-align: center;
+}
+
+#welcomeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Fun Fact Box Design for Dyslexic Kids */
+
+
+.funFactBox p {
+  line-height: 5; /* Increase line spacing for clarity */
+  font-size: 18px;
+  color: #333333; /* Dark text for high contrast */
+}
+
+/* Button Styling */
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+
+
+
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+#instructions {
+  margin-top: 20px;
+  color: #333;
+  font-size: 1.2em;
+  line-height: 1.5;
+}
+
+#instructions h2 {
+  padding-left: 10;
+  padding-bottom: 100;
+  margin-bottom: 10px;
+  color: #4caf50;
 }

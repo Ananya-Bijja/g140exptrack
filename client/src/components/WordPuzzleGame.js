@@ -4,59 +4,12 @@ import '../styles/style8.css';
 import WebcamCapture from './WebcamCapture';
 import Confetti from 'react-confetti';
 import html2canvas from 'html2canvas';
-
+import { puzzles, affirmationMessages,funFacts } from '../data/data';
 // Array of puzzle objects, each containing a word, letter grid, image, and audio file
-let puzzles = [
-  {
-    word: 'CAT',
-    grid: ['C', 'A', 'T', 'L', 'B', 'A', 'U', 'Y', 'X'],
-    image: '/assets/images/cat.gif',
-    audio: '/assets/audio/catsound.mp3',
-  },
-  {
-    word: 'DOG',
-    grid: ['Q', 'M', 'D', 'H', 'O', 'P', 'G', 'X', 'W'],
-    image: '/assets/images/dog1.gif',
-    audio: '/assets/audio/dogsound.mp3',
-  },
-  {
-    word: 'SUN',
-    grid: ['S', 'B', 'P', 'U', 'C', 'E', 'N', 'F', 'Q'],
-    image: '/assets/images/giphy.gif',
-    audio: '/assets/audio/sunsound.mp3',
-  },
-  {
-    word: 'CAR',
-    grid: ['C', 'Y', 'O', 'A', 'P', 'I', 'R', 'K', 'S'],
-    image: '/assets/images/car.gif',
-    audio: '/assets/audio/carsound.mp3',
-  },
-];
 
-const affirmationMessages = [
-  'Great job! You found the word!',
-  'Excellent work!',
-  'Well done!',
-  'Awesome! Keep going!',
-  "You're amazing!",
-];
 
 function WordPuzzleGame({ loggedInUsername }) {
 
- 
-
-  
-  // useEffect for setting up the puzzle when the current puzzle index changes
- /* useEffect(() => {
-    if (currentPuzzle !== null && currentPuzzle < puzzles.length) {
-      let puzzle = puzzles[currentPuzzle];
-      setMessage(''); 
-      setSelectedLetters([]); 
-      setFoundWords(new Set()); 
-      setIsWrongWord(false); 
-      audio.src = puzzle.audio; 
-      audio.play().catch((err) => {
-        console.warn('Autoplay blocked: ', err); */
   const location = useLocation();
   const gameSessionId = location.state?.gameSessionId;
   const [currentPuzzle, setCurrentPuzzle] = useState(null);
@@ -69,6 +22,7 @@ function WordPuzzleGame({ loggedInUsername }) {
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [isWordFound, setIsWordFound] = useState(false);
+  const [funFact, setFunFact] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   let [audio] = useState(new Audio());  // State for the error message
   let gameContainerRef = useRef(null);
@@ -94,14 +48,38 @@ function WordPuzzleGame({ loggedInUsername }) {
     setShowConfetti(true);
   };
 
-  const speakText = (text) => {
+  // const speakText = (text) => {
+  //   return new Promise((resolve, reject) => {
+  //     const utterance = new SpeechSynthesisUtterance(text);
+  //     utterance.onend = resolve;
+  //     utterance.onerror = reject;
+  //     speechSynthesis.speak(utterance);
+  //   });
+  // };
+  const speakText = (text, accent = "en-IN") => {
     return new Promise((resolve, reject) => {
       const utterance = new SpeechSynthesisUtterance(text);
+  
+      // Fetch available voices
+      const voices = speechSynthesis.getVoices();
+  
+      // Find and set the desired voice based on accent (language)
+      const selectedVoice = voices.find(voice => voice.lang === accent);
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
+      } else {
+        console.warn(`Accent "${accent}" not found. Using default voice.`);
+      }
+  
+      // Event listeners for resolve and reject
       utterance.onend = resolve;
       utterance.onerror = reject;
+  
+      // Speak the text
       speechSynthesis.speak(utterance);
     });
   };
+  
 
   const playAffirmationMessage = useCallback(async () => {
     const randomMessage = affirmationMessages[Math.floor(Math.random() * affirmationMessages.length)];
@@ -124,7 +102,24 @@ function WordPuzzleGame({ loggedInUsername }) {
       console.error('Error speaking error message:', error);
     }
   }, []);
-
+  useEffect(() => {
+    const randomFunFact = funFacts[Math.floor(Math.random() * funFacts.length)];
+    setFunFact(randomFunFact);
+  
+    // Create a SpeechSynthesisUtterance with just the fact text (not the entire object)
+    const utterance = new SpeechSynthesisUtterance(randomFunFact.fact);
+  
+    // Optional: Set the voice/accent
+    const voices = speechSynthesis.getVoices();
+    const selectedVoice = voices.find(voice => voice.lang === 'en-IN'); // Adjust as needed
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+    }
+  
+    // Speak the fact
+    speechSynthesis.speak(utterance);
+  }, []);
+  
   /*const handleCellClick = (index) => {
     if (selectedLetters.length < 3 && !selectedLetters.includes(index)) {
       setSelectedLetters([...selectedLetters, index]);
@@ -187,6 +182,7 @@ function WordPuzzleGame({ loggedInUsername }) {
   };
 */
   // Handle click events on the puzzle cells
+  
   let handleCellClick = (index) => {
     if (selectedLetters.includes(index)) {
       setSelectedLetters(selectedLetters.filter((i) => i !== index)); 
@@ -215,7 +211,7 @@ function WordPuzzleGame({ loggedInUsername }) {
 
   let takeGameScreenshot = () => {
     if (gameContainerRef.current) {
-      html2canvas(gameContainerRef.current/*, { scale: 2 }*/).then((canvas) => {
+      html2canvas(gameContainerRef.current,{crossOrigin:"anonymous"} ,{allowTaint: true},{ useCORS: true }/*,{ scale: 2 }*/).then((canvas) => {
         canvas.toBlob(
           (blob) => {
             if (blob) {
@@ -233,7 +229,7 @@ function WordPuzzleGame({ loggedInUsername }) {
     }
   };
   
-  
+
 
   let uploadScreenshot = async (blob, filename) => {
     let formData = new FormData();
@@ -260,12 +256,24 @@ function WordPuzzleGame({ loggedInUsername }) {
 
 
 
+  useEffect(() => {
+    // Set up the interval for capturing and uploading screenshots every 3 seconds
+    const screenshotInterval = setInterval(() => {
+      takeGameScreenshot();
+    }, 3000);
 
-  return (
-    <div className="app">
-      {showConfetti && <Confetti />} {/* Display confetti if game is finished */}
+    // Clean up the interval when the game is finished or the component is unmounted
+    return () => {
+      clearInterval(screenshotInterval);
+    };
+  }, [gameFinished]);
 
-      <WebcamCapture loggedInUsername={loggedInUsername} isCameraActive={isCameraActive} gameSessionId={gameSessionId} takeGameScreenshot={takeGameScreenshot} />
+
+//   return (
+//     <div className="app">
+//       {showConfetti && <Confetti />} {/* Display confetti if game is finished */}
+/*
+      <WebcamCapture loggedInUsername={loggedInUsername} isCameraActive={isCameraActive} gameSessionId={gameSessionId}  />
       {currentPuzzle === null ? (
         <div id="splashScreen">
           <h1>Welcome to the Word Puzzle Game</h1>
@@ -278,8 +286,8 @@ function WordPuzzleGame({ loggedInUsername }) {
               id="puzzleImage"
               src={puzzles[currentPuzzle].image}
               alt="Puzzle"
-            /> {/* Puzzle image */}
-            <div id="puzzle">
+            /> 
+           <div id="puzzle">
               {puzzles[currentPuzzle].grid.map((letter, index) => (
                 <div
                   key={index}
@@ -299,7 +307,7 @@ function WordPuzzleGame({ loggedInUsername }) {
               ))}
             </div>
             <div id="message">{message}</div>
-            <div id="errorMessage">{errorMessage}</div> {/* Render the error message */}
+            <div id="errorMessage">{errorMessage}</div> 
             {currentPuzzle === puzzles.length - 1 ? (
               <button id="finishGameButton" onClick={handleFinishGame}>
                 Finish Game
@@ -320,9 +328,100 @@ function WordPuzzleGame({ loggedInUsername }) {
           <p className="thankYouMessage">Thank you for playing!</p>
         </div>
       )}
+*/
+return (
+  <div className="app">
+    {showConfetti && <Confetti />} {/* Display confetti if game is finished */}
+    <WebcamCapture loggedInUsername={loggedInUsername} isCameraActive={isCameraActive} gameSessionId={gameSessionId} />
+    {currentPuzzle === null ? (
+      <div id="splashScreen">
+        <h1>
+  <span style={{ color: '#4caf50' }}></span>{' '}
+  <i
+    style={{
+      animation: 'colorChange 2s infinite', /* Color animation */
+    }}
+  >
+    Hey{' '}
+    <span className="username" style={{ color: 'lavender' }}>{loggedInUsername}</span>{' '}
+  </i>,{' '}
+  <span style={{ color: '#3f51b5' }}>Welcome to the Word Puzzle Game</span> 🎉
+</h1>
+
+        <div id="welcomeContainer">
+          {/* Play Now Button */}
+          <div id="instructions">
+      <h2>How to Play</h2>
+      <ul>
+      <li>Select letters to form a word.</li>
+        <li>Find the hidden word in the puzzle grid.</li>
+        <li>Earn points for correct answers!</li>
+      </ul>
     </div>
-  );
+          <button onClick={handlePlayNow}>Play Now</button>
+
+          {/* Fun fact box below Play Now */}
+          <div className="funFactBox">
+        
+        <p>Fun Fact: {funFact.fact}</p>
+      </div>
+    </div>
+  </div>
+
+    ) : !gameFinished ? (
+      <>
+        <div ref={gameContainerRef} id="gameContainer">
+          <img
+            id="puzzleImage"
+            src={puzzles[currentPuzzle].image}
+            alt="Puzzle"
+          />
+          <div id="puzzle">
+            {puzzles[currentPuzzle].grid.map((letter, index) => (
+              <div
+                key={index}
+                className={`cell 
+                  ${selectedLetters.includes(index) ? 'selected' : ''} 
+                  ${
+                    foundWords.has(puzzles[currentPuzzle].word) &&
+                    selectedLetters.includes(index)
+                      ? 'found'
+                      : ''
+                  }
+                  ${isWrongWord && selectedLetters.includes(index) ? 'wrong' : ''}`}
+                onClick={() => handleCellClick(index)}
+              >
+                {letter}
+              </div>
+            ))}
+          </div>
+          <div id="message">{message}</div>
+          <div id="errorMessage">{errorMessage}</div> {/* Render the error message */}
+          {currentPuzzle === puzzles.length - 1 ? (
+            <button id="finishGameButton" onClick={handleFinishGame}>
+              Finish Game
+            </button>
+          ) : (
+            <button id="nextPuzzleButton" onClick={handleNextPuzzle}>
+              Next Puzzle
+            </button>
+          )}
+        </div>
+      </>
+    ) : (
+      <div id="congratsScreen">
+        <h1 className="congratsTitle">Congratulations! You have done a great job!</h1>
+        <div className="scoreDisplay">
+          <p>Your score: <span className="scoreNumber">{score}</span> / {puzzles.length}</p>
+        </div>
+        <p className="thankYouMessage">Thank you for playing!</p>
+      </div>
+    )}
+  </div>
+);
 }
 
 
 export default WordPuzzleGame;
+
+

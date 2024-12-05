@@ -7,6 +7,14 @@
   background-size: cover; /* Make the background cover the entire container */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Prevent the image from repeating */
+  /* background-image: url('..//..//public/assets/images/Screenshot\ \(122\).png'); */
+   /* Set your background image path here */
+  /* background-size: cover;  */
+  /* Make the background cover the entire container */
+  /* background-position: center; */
+   /* Center the image */
+  /* background-repeat: no-repeat;  */
+  /* Prevent the image from repeating */
 }
 /* Login Form Styling */
 .login-form {

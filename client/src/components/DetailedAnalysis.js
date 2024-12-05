@@ -65,6 +65,7 @@ import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer, Cell } from 'recharts';
 import { useNavigate, useParams } from 'react-router-dom'; // Import useParams
 import '../styles/DetailedAnalysis.css';// Import the CSS file
+import Navbar from './Navbar';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF6384', '#FF8042'];
 
@@ -103,6 +104,8 @@ const DetailedAnalysis = () => {
   }, [sessionId, username]); // Dependency array to refetch when sessionId changes
 
   return (
+    <>
+    <Navbar />
     <div className="analysis-container">
       <div className="chart-container">
         <h1 style={{ color: 'white', textAlign: 'center' }}>Emotion Analysis Summary</h1>
@@ -128,6 +131,7 @@ const DetailedAnalysis = () => {
         View Detailed Image Analysis
       </button>
     </div>
+    </>
   );
 };
 

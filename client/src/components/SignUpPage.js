@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/SignUpPage.css';  // Import the CSS file
+import Navbar from './Navbar';
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
     username: '',
@@ -64,6 +65,8 @@ const SignUpPage = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <div className="signup-container">
       <h1>Sign Up</h1>
       <form onSubmit={handleSubmit} className="signup-form">
@@ -118,6 +121,7 @@ const SignUpPage = () => {
         
       </form>
     </div>
+    </>
   );
 };
 

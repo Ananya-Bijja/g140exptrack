@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import '../styles/DetailedImages.css';
+import Navbar from './Navbar';
 
 const DetailedImages = () => {
   const { sessionId } = useParams();
@@ -31,6 +32,8 @@ const DetailedImages = () => {
   if (!detailedData.length) return <p>No images available for this session.</p>;
 
   return (
+    <>
+    <Navbar />
     <div>
       <h1>Detailed Emotion Analysis for Session {sessionId}</h1>
       <div className="table-container">
@@ -89,6 +92,7 @@ const DetailedImages = () => {
         </table>
       </div>
     </div>
+    </>
   );
 };
 

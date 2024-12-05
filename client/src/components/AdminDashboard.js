@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/AdminDashboard.css';
-
+import Navbar from './Navbar';
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -72,6 +72,8 @@ const AdminDashboard = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <div className="admin-dashboard">
       <h1>Admin Dashboard</h1>
 
@@ -127,6 +129,7 @@ const AdminDashboard = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

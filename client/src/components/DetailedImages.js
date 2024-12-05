@@ -35,7 +35,7 @@ const DetailedImages = () => {
     <>
     <Navbar />
     <div>
-      <h1>Detailed Emotion Analysis for Session {sessionId}</h1>
+      <h1 style={{ color: 'black', textAlign: 'center' }}>Detailed Emotion Analysis for Session {sessionId}</h1>
       <div className="table-container">
         <table className="detailed-analysis-table">
           <thead>

@@ -108,7 +108,7 @@ const DetailedAnalysis = () => {
     <Navbar />
     <div className="analysis-container">
       <div className="chart-container">
-        <h1 style={{ color: 'white', textAlign: 'center' }}>Emotion Analysis Summary</h1>
+        <h1 style={{ color: 'black', textAlign: 'center' }}>Emotion Analysis Summary</h1>
         <ResponsiveContainer width="100%" height={400}>
           <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />

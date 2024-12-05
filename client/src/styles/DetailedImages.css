@@ -1,42 +1,73 @@
-/* Detailed Analysis Table */
+/* Heading Box Style */
+.heading-box {
+  width: fit-content; /* Adjust width based on content */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ 
+  padding: 20px 30px; /* Increased padding for better appearance */
+  background-color: #ffffff; /* Light background color */
+  border: 2px solid #333; /* Darker border for better contrast */
+  border-radius: 12px; /* More rounded corners for elegance */
+  font-size: 48px; /* Set the font size */
+  font-weight: bold; /* Make the text bold */
+  text-align: center; /* Center the text inside the box */
+  margin: 0 auto; /* Center the box */
+  margin-top: 30px; /* Increased top margin for better spacing */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for a more modern look */
+  transition: all 0.3s ease-in-out; /* Smooth transition for hover effect */
+}
+
+.heading-box:hover {
+  transform: translateY(-5px); /* Slightly lift the box on hover */
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Enhance the shadow effect on hover */
+}
+
+/* Detailed Analysis Table Style */
 .detailed-analysis-table {
   width: 80%;
   margin: 20px auto; /* Center the table horizontally */
   border-collapse: collapse;
-  border: 1px solid transparent; /* Transparent border */
+  border: 1px solid transparent;
   background-color: transparent;
+  max-height: 600px;
+  overflow-y: auto;
 }
 
 .detailed-analysis-table th,
 .detailed-analysis-table td {
-  padding: 15px;
-  text-align: center;
-  border: 1px solid transparent; /* Transparent border for cells */
+  padding: 8px 15px; /* Adjust padding for readability */
+  text-align: left; /* Align content to the left */
+  border: 1px solid transparent;
 }
 
 .detailed-analysis-table th {
   font-weight: bold;
   font-size: 18px;
+  border: 2px solid #333; /* Box around the column headers */
+  background-color: #ffffff; /* Light background color for the headers */
+  text-transform: uppercase; /* Make header text uppercase for clarity */
 }
 
 .detailed-analysis-table td {
   font-size: 16px;
+  vertical-align: middle;
 }
 
-/* Image Styling */
 .image {
-  width: 190px;
+  width: 420px;
   height: auto;
   border-radius: 8px;
+  margin-bottom: 8px;
 }
 
 .screenshot {
-  width: 150px;
+  width: 130px;
   height: auto;
   border-radius: 8px;
+  margin-bottom: 8px;
 }
 
-/* Emotions List */
 table td ul {
   list-style-type: none;
   padding: 0;
@@ -44,9 +75,25 @@ table td ul {
 }
 
 table td ul li {
-  margin-bottom: 5px;
+  margin-bottom: 3px;
 }
 
 table td ul li strong {
   font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .heading-box {
+    font-size: 36px; /* Smaller font size for mobile devices */
+    padding: 15px 25px; /* Adjust padding for smaller screens */
+  }
+  .detailed-analysis-table {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .image, .screenshot {
+    width: 100%;
+    margin-bottom: 5px;
+  }
 }

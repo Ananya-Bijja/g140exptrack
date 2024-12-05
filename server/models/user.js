@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
   role: { type: String, default: "child" },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  emotionAnalysis: [GameSession.schema],
+  gameSessions: [GameSession.schema],
 });
 
 module.exports = mongoose.model('User', userSchema);

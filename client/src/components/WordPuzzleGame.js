@@ -27,6 +27,15 @@ function WordPuzzleGame({ loggedInUsername }) {
   let [audio] = useState(new Audio());  // State for the error message
   let gameContainerRef = useRef(null);
   
+  const wordPuzzleBackground = {
+   
+    backgroundImage:  `url('/assets/images/Screenshot (122).png')`,
+    backgroundSize: 'cover', // Makes sure the image covers the entire viewport
+    backgroundPosition: 'center', // Center the image
+    backgroundRepeat: 'no-repeat', // Prevent image repetition
+    minHeight: '100vh',
+  };
+
   const handleNextPuzzle = useCallback(() => {
     if (currentPuzzle < puzzles.length - 1) {
       setCurrentPuzzle(currentPuzzle + 1);
@@ -107,17 +116,14 @@ function WordPuzzleGame({ loggedInUsername }) {
     setFunFact(randomFunFact);
   
     // Create a SpeechSynthesisUtterance with just the fact text (not the entire object)
-    const utterance = new SpeechSynthesisUtterance(randomFunFact.fact);
+    
   
     // Optional: Set the voice/accent
-    const voices = speechSynthesis.getVoices();
-    const selectedVoice = voices.find(voice => voice.lang === 'en-IN'); // Adjust as needed
-    if (selectedVoice) {
-      utterance.voice = selectedVoice;
-    }
+   
+    
   
     // Speak the fact
-    speechSynthesis.speak(utterance);
+    
   }, []);
   
   /*const handleCellClick = (index) => {
@@ -330,6 +336,7 @@ function WordPuzzleGame({ loggedInUsername }) {
       )}
 */
 return (
+  <div style={wordPuzzleBackground}>
   <div className="app">
     {showConfetti && <Confetti />} {/* Display confetti if game is finished */}
     <WebcamCapture loggedInUsername={loggedInUsername} isCameraActive={isCameraActive} gameSessionId={gameSessionId} />
@@ -337,15 +344,11 @@ return (
       <div id="splashScreen">
         <h1>
   <span style={{ color: '#4caf50' }}></span>{' '}
-  <i
-    style={{
-      animation: 'colorChange 2s infinite', /* Color animation */
-    }}
-  >
+  <i>
     Hey{' '}
-    <span className="username" style={{ color: 'lavender' }}>{loggedInUsername}</span>{' '}
+    <span className="username" style={{ color: '#000' }}>{loggedInUsername}</span>{' '}
   </i>,{' '}
-  <span style={{ color: '#3f51b5' }}>Welcome to the Word Puzzle Game</span> 🎉
+ Welcome to the Word Puzzle Game 🎉
 </h1>
 
         <div id="welcomeContainer">
@@ -417,6 +420,7 @@ return (
         <p className="thankYouMessage">Thank you for playing!</p>
       </div>
     )}
+  </div>
   </div>
 );
 }

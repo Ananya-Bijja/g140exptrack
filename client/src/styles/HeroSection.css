@@ -1,0 +1,32 @@
+/* Custom styles for the buttons */
+.btn-login {
+  background-color: #008CBA;  /* Green color */
+  color: white;
+  padding: 15px 32px;
+  font-size: 18px;
+  border-radius: 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+
+.btn-login:hover {
+  background-color: #008CBA;  /* Slightly darker green on hover */
+}
+
+.btn-signup {
+  background-color: #90b6c8;  /* Blue color */
+  color: white;
+  padding: 15px 32px;
+  font-size: 18px;
+  border-radius: 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+
+.btn-signup:hover {
+  background-color: #007bb5;  /* Slightly darker blue on hover */
+}

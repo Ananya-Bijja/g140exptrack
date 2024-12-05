@@ -48,7 +48,7 @@ let userSchema = new mongoose.Schema({
   role: { type: String, default: "child" },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  emotionAnalysis: [gameSessionSchema],
+  gameSessions: [gameSessionSchema],
 });
 
 let User = mongoose.model('User', userSchema);
@@ -107,7 +107,7 @@ app.post('/api/login', async (req, res) => {
     res.status(200).json({
       message: 'Login successful',
       isAdmin: user.role === 'admin',
-      user: { username: user.username, emotionAnalysis: user.emotionAnalysis }
+      user: { username: user.username, gameSessions: user.gameSessions }
     });
   } catch (error) {
     res.status(500).json({ message: 'Error during login', error: error.message });
@@ -135,10 +135,10 @@ app.get('/api/users', async (req, res) => {
 app.get('/api/game-sessions/:userId', async (req, res) => {
   let { userId } = req.params;
   try {
-    let user = await User.findById(userId).select('emotionAnalysis');
+    let user = await User.findById(userId).select('gameSessions');
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    res.status(200).json({ sessions: user.emotionAnalysis });
+    res.status(200).json({ sessions: user.gameSessions });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching game sessions', error: error.message });
   }
@@ -151,7 +151,7 @@ app.post('/api/create-game-session', async (req, res) => {
 
   let gameSessionId = new mongoose.Types.ObjectId();
   try {
-    let user = await User.findOneAndUpdate({ username }, { $push: { emotionAnalysis: { gameSessionId, images: [] } } }, { new: true });
+    let user = await User.findOneAndUpdate({ username }, { $push: { gameSessions: { gameSessionId, images: [] } } }, { new: true });
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     res.status(200).json({ gameSessionId });
@@ -169,7 +169,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
   try {
     let newImage = { imageUrl: imagePath, capturedAt: new Date() };
     let fieldToUpdate = type === 'screenshot' ? 'screenshots' : 'images';
-    let user = await User.findOneAndUpdate({ username, "emotionAnalysis.gameSessionId": gameSessionId }, { $push: { [`emotionAnalysis.$.${fieldToUpdate}`]: newImage } }, { new: true });
+    let user = await User.findOneAndUpdate({ username, "gameSessions.gameSessionId": gameSessionId }, { $push: { [`gameSessions.$.${fieldToUpdate}`]: newImage } }, { new: true });
 
     if (!user) return res.status(404).json({ message: 'User or game session not found' });
     res.status(200).json({ message: 'Image uploaded successfully!', imagePath });
@@ -190,12 +190,12 @@ app.post('/api/analyze/:sessionId', async (req, res) => {
 
   try {
     // Fetch the user and session
-    let user = await User.findOne({ username, "emotionAnalysis.gameSessionId": sessionId });
+    let user = await User.findOne({ username, "gameSessions.gameSessionId": sessionId });
     if (!user) {
       return res.status(404).json({ message: 'User or game session not found' });
     }
 
-    let session = user.emotionAnalysis.find(session => session.gameSessionId === sessionId);
+    let session = user.gameSessions.find(session => session.gameSessionId === sessionId);
     if (!session) {
       return res.status(404).json({ message: 'Game session not found' });
     }
@@ -281,12 +281,12 @@ app.post('/api/analysis-summary/:sessionId', async (req, res) => {
 
   try {
     // Fetch the user and session
-    let user = await User.findOne({ username, "emotionAnalysis.gameSessionId": sessionId });
+    let user = await User.findOne({ username, "gameSessions.gameSessionId": sessionId });
     if (!user) {
       return res.status(404).json({ message: 'User or game session not found' });
     }
 
-    let session = user.emotionAnalysis.find(session => session.gameSessionId === sessionId);
+    let session = user.gameSessions.find(session => session.gameSessionId === sessionId);
     if (!session || session.images.length === 0) {
       return res.status(404).json({ message: 'No images found in the game session' });
     }
@@ -318,10 +318,10 @@ app.get('/api/detailed-analysis/:sessionId', async (req, res) => {
   let { sessionId } = req.params;
 
   try {
-    let users = await User.find({}, 'username emotionAnalysis').lean();
+    let users = await User.find({}, 'username gameSessions').lean();
 
     let detailedAnalysis = users.map(user => {
-      let sessions = user.emotionAnalysis.filter(session => session.gameSessionId === sessionId);
+      let sessions = user.gameSessions.filter(session => session.gameSessionId === sessionId);
 
       return sessions.map(session => ({
         username: user.username,
@@ -329,8 +329,7 @@ app.get('/api/detailed-analysis/:sessionId', async (req, res) => {
         imagesWithEmotions: session.images.map(image => {
           // Find the corresponding screenshot captured at the same timestamp (if any)
           let matchingScreenshot = session.screenshots.find(screenshot =>
-          { console.log('Comparing Image Timestamp:', new Date(image.capturedAt).getTime());
-            console.log('With Screenshot Timestamp:', new Date(screenshot.capturedAt).getTime());
+          { 
             return Math.abs(new Date(screenshot.capturedAt).getTime() - new Date(image.capturedAt).getTime())<=3000;
 
         });

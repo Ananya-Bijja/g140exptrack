@@ -1,16 +1,17 @@
-body, html {
+/* Global Styles */
+html, body {
   height: 100%;
   margin: 0;
   font-family: Arial, sans-serif;
   background-image: url('../../public/assets/images/clouds_background.jpg');
   background-size: cover;
   background-position: center;
-  background-attachment: fixed; /* Keeps the background fixed as you scroll */
-} 
+  background-attachment: fixed;
+}
 
 /* Main Application Container */
 .app {
-  min-height: 100vh; /* Ensures content spans at least the full viewport height */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,7 +22,7 @@ body, html {
   box-sizing: border-box;
 }
 
-/* Splash Screen Styles */
+/* Splash Screen */
 #splashScreen {
   display: flex;
   flex-direction: column;
@@ -56,8 +57,8 @@ body, html {
 #gameContainer {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centers all content horizontally */
-  justify-content: flex-start; /* Keeps the image and grid aligned vertically */
+  align-items: center;
+  justify-content: flex-start;
   text-align: center;
   background-color: #fff;
   padding: 20px;
@@ -70,23 +71,21 @@ body, html {
 
 /* Puzzle Image Styles */
 #puzzleImage {
-  max-width: 100%; /* Ensure it doesn't overflow horizontally */
-  max-height: 300px; /* Restrict the maximum height */
+  max-width: 100%;
+  max-height: 300px;
   margin-top: 20px;
-  object-fit: contain; /* Ensures the aspect ratio of the GIF is maintained */
+  object-fit: contain;
 }
 
 /* Puzzle Grid Styles */
 #puzzle {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Always 3 equal columns */
-  grid-auto-rows: 1fr; /* Ensures uniform row heights */
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  justify-content: center; /* Centers the grid horizontally */
-  align-items: center; /* Centers the grid vertically */
-  width: min(90vw, 300px); /* Responsive width, max 300px */
-  height: auto; /* Let the height adjust based on content */
-  margin: 20px auto; /* Centers the grid within its container */
+  justify-content: center;
+  align-items: center;
+  width: min(90vw, 300px);
+  margin: 20px auto;
   box-sizing: border-box;
 }
 
@@ -123,7 +122,7 @@ body, html {
   margin-top: 20px;
   font-size: 18px;
   color: #4caf50;
-  word-wrap: break-word; /* Prevent message from overflowing */
+  word-wrap: break-word;
   padding: 0 10px;
 }
 
@@ -131,8 +130,8 @@ body, html {
 #errorMessage {
   margin-top: 20px;
   font-size: 18px;
-  color: red; /* Red color for error message */
-  word-wrap: break-word; /* Prevent message from overflowing */
+  color: red;
+  word-wrap: break-word;
   padding: 0 10px;
 }
 
@@ -144,13 +143,13 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  background-color: #85bbd2;/*i changed now */
+  background-color: #85bbd2;
   color: white;
   width: 200px;
 }
 
 button:hover {
-  background-color: #85bbd2;
+  background-color: #75a1b0;
 }
 
 /* Responsiveness for smaller screens */
@@ -167,12 +166,12 @@ button:hover {
   .cell {
     width: 80px;
     height: 80px;
-    font-size: 20px; /* Adjust font size */
+    font-size: 20px;
   }
 
   /* Shrink Puzzle Image for smaller screens */
   #puzzleImage {
-    max-height: 200px; /* Limit the height more on smaller screens */
+    max-height: 200px;
   }
 
   /* Full width for buttons on small screens */
@@ -254,82 +253,35 @@ button:hover {
     transform: translateY(0);
   }
 }
+
+/* Optional: Username color animation */
+.username {
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  
+}
+
 @keyframes colorChange {
   0% { color: lavender; }
-  16% { color: #ff5722; }  /* Red-Orange */
-  32% { color: #4caf50; }  /* Green */
-  48% { color: #3f51b5; }  /* Blue */
-  64% { color: #ffc107; }  /* Amber */
-  80% { color: #e91e63; }  /* Pink */
-  100% { color: lavender; } /* Back to Lavender */
+  16% { color: #ff5722; }
+  32% { color: #4caf50; }
+  48% { color: #3f51b5; }
+  64% { color: #ffc107; }
+  80% { color: #e91e63; }
+  100% { color: lavender; }
 }
 
-
-/* Optional: If you want to apply to specific element */
-.username {
-  color: lavender; /* Default color */
-  font-weight: bold;
-  color: #000;
-  /* Apply color animation */
-}
-
-/* #welcomeContainer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-#instructionsBox {
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  padding: 16px;
-  max-width: 300px;
-  background-color: #f9f9f9;
-}
-
-#instructionsBox h2 {
-  margin: 0 0 10px 0;
-  font-size: 18px;
-}
-
-#instructionsBox ul {
-  list-style-type: disc;
-  margin-left: 20px;
-  font-size: 14px;
-}
-
-#splashScreen h1 {
-  text-align: center;
-  color: #333;
-}
-
-#splashScreen button {
-  margin: 20px auto;
-  display: block;
-}
- */
- #splashScreen {
-  text-align: center;
-}
-
-#welcomeContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Fun Fact Box Design for Dyslexic Kids */
-
-
+/* Fun Fact Box for Dyslexic Kids */
 .funFactBox p {
-  line-height: 5; /* Increase line spacing for clarity */
+  line-height: 1.5;
   font-size: 18px;
-  color: #333333; /* Dark text for high contrast */
+  color: #333333;
+  padding: 10px;
 }
 
 /* Button Styling */
 button {
-  background-color:  #90b6c8;
+  background-color: #90b6c8;
   color: white;
   padding: 15px 25px;
   border: none;
@@ -344,21 +296,99 @@ button:hover {
 }
 
 
-
-
-
-
-
+/* Instructions Box Styling */
 #instructions {
   margin-top: 20px;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   color: #333;
   font-size: 1.2em;
-  line-height: 1.5;
+  line-height: 1.6;
+  max-width: 80%; /* Adjusted to make it wider */
+  margin: 20px auto;
+  text-align: left;
 }
 
 #instructions h2 {
-  padding-left: 10;
-  padding-bottom: 100;
-  margin-bottom: 10px;
+  font-size: 1.8em;
   color: #4caf50;
+  margin-bottom: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 3px solid #4caf50;
+  padding-bottom: 10px;
+}
+
+#instructions p {
+  font-size: 1.1em;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+#instructions ul {
+  padding-left: 20px;
+  font-size: 1em;
+  list-style-type: disc;
+  color: #555;
+}
+
+#instructions ul li {
+  margin-bottom: 8px;
+}
+
+#instructions a {
+  color: #ff5722;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+#instructions a:hover {
+  text-decoration: underline;
+  color: #ff7043;
+}
+
+/* Button Styling */
+button {
+  background-color: #90b6c8;
+  color: white;
+  padding: 15px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #75a1b0;
+}
+
+/* Mobile-specific Styles for Instructions */
+@media (max-width: 600px) {
+  #instructions {
+    font-size: 1.1em;
+    padding: 15px;
+    max-width: 95%; /* Increased width on smaller screens */
+  }
+
+  #instructions h2 {
+    font-size: 1.5em;
+  }
+
+  #instructions p {
+    font-size: 1.1em;
+  }
+
+  #instructions ul {
+    padding-left: 15px;
+  }
+
+  button {
+    width: 100%;
+    padding: 15px 0;
+  }
 }

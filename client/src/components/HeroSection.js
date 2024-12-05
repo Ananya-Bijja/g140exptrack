@@ -1,4 +1,5 @@
 import React from 'react';
+import '../styles/HeroSection.css'; // Import the custom CSS file
 
 const HeroSection = () => {
   return (
@@ -11,12 +12,8 @@ const HeroSection = () => {
           emotionally supportive.
         </p>
         <div className="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
-          <a href="/login" className="btn btn-primary btn-lg px-4 me-sm-3">
-            Login
-          </a>
-          <a href="/signup" className="btn btn-outline-secondary btn-lg px-4">
-            Signup
-          </a>
+          <a href="/login" className="btn-login">Login</a>
+          <a href="/signup" className="btn-signup">Signup</a>
         </div>
       </div>
     </div>

@@ -452,7 +452,9 @@ const AdminDashboard = () => {
     <>
       <Navbar />
       <div className="admin-dashboard">
-        <h1>ADMIN DASHBOARD</h1>
+        <div className='heading-box'>
+        <h1>ADMIN DASHBOARD</h1></div>
+        <div className='spacer'></div>
         <h2>LIST OF USERS</h2>
         {/* Search Users */}
         <div className="search-container">

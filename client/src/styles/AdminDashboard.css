@@ -11,10 +11,11 @@ body, html {
 h2 {
   text-align: center;
   color: #333;
-  font-weight: 600;
-  margin-top: 20px;
+  font-weight: bold;
+  font-size: 100px;
+  margin-top: 40px; /* Add margin to create space above */
+  margin-bottom: 20px; /* Add margin to create space below */
 }
-
 h1 {
   text-align: center;
   color: #2a3d4d;
@@ -257,4 +258,30 @@ button:hover {
   .search-container .search-button {
     width: 100%;
   }
+}
+.heading-box {
+  text-align: center;
+  
+  background-color: rgba(144, 182, 200, 0.5)
+  ; /* Slightly transparent */
+  border: 2px solid #90b6c8;
+  border-radius: 12px;
+ 
+  display: inline-block;
+  max-width: 80%; /* Adjust width for responsiveness */
+  margin-bottom: 100px;
+}
+
+.heading-box h1 {
+  margin: 0;
+  color: #2a3d4d;
+  font-weight: bold;
+  font-size: 3rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.spacer {
+  height: 20px; /* Adjust the height as needed */
 }

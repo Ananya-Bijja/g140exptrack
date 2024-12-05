@@ -1,37 +1,40 @@
+/* Full-page container with a modern background */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-image: url('..//..//public/assets/images/clouds_background.jpg'); /* Set your background image path here */
-  background-size: cover; /* Make the background cover the entire container */
-  background-position: center; /* Center the image */
-  background-repeat: no-repeat; /* Prevent the image from repeating */
-  /* background-image: url('..//..//public/assets/images/Screenshot\ \(122\).png'); */
-   /* Set your background image path here */
-  /* background-size: cover;  */
-  /* Make the background cover the entire container */
-  /* background-position: center; */
-   /* Center the image */
-  /* background-repeat: no-repeat;  */
-  /* Prevent the image from repeating */
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                    url('..//..//public/assets/images/clouds_background.jpg'); /* Background image */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  font-family: 'Poppins', sans-serif; /* Modern sans-serif font */
+  padding: 20px; /* Added padding for smaller screens */
+  box-sizing: border-box; /* Ensure padding doesn’t overflow */
 }
-/* Login Form Styling */
+
+/* Styling for the login form container */
 .login-form {
-  background-color: rgba(255, 255, 255, 0.9); /* Make the background slightly transparent so the image is visible behind */
-  padding: 50px; /* Increased padding */
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Added shadow for depth */
-  width: 350px; /* Increased width of the form */
-}
-
-.login-form h2 {
-  margin-bottom: 30px;
-  color: #333;
+  background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white */
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Softer shadow for depth */
+  width: 100%;
+  max-width: 400px; /* Prevent the form from stretching too wide */
   text-align: center;
-  font-size: 28px; /* Increased font size for Login heading */
+  box-sizing: border-box; /* Ensures padding doesn’t affect layout */
 }
 
+/* Login heading */
+.login-form h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Input group styling */
 .form-group {
   margin-bottom: 20px;
   text-align: left;
@@ -39,50 +42,118 @@
 
 .form-group label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
   color: #555;
-  font-weight: bold; /* Make the label text bold */
+  font-weight: 500;
 }
 
 .form-group input {
   width: 100%;
-  padding: 12px; /* Increased padding for inputs */
+  padding: 12px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: all 0.3s ease;
 }
 
-/* Sign Up Link Styling */
-.signup-link {
-  text-align: center; /* Center the sign-up link */
-  margin: 15px 0;
+.form-group input:focus {
+  border-color: #0078D7; /* Focus effect with a blue border */
+  box-shadow: 0 0 8px rgba(0, 120, 215, 0.3);
+  outline: none;
+}
+
+/* Submit button styling */
+.btn-submit {
+  width: 100%;
+  padding: 12px;
+  background-color: #90b6c8; /* Deep blue for buttons */
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-submit:hover {
+  background-color: #0056a8; /* Darker blue on hover */
+  transform: scale(1.02); /* Subtle scale effect */
+}
+
+/* Error message styling */
+.error {
+  color: #D8000C; /* Bright red for error messages */
+  background-color: #FFBABA; /* Light red background */
+  border: 1px solid #D8000C;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 4px;
   font-size: 14px;
+  text-align: left;
+}
+
+/* Sign-up link styling */
+.signup-link {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #666;
 }
 
 .signup-link a {
-  color: #4CAF50;
+  color: #90b6c8;
   text-decoration: none;
+  font-weight: 500;
 }
 
 .signup-link a:hover {
   text-decoration: underline;
 }
 
-.btn-submit {
-  width: 100%;
-  padding: 12px;
-  background-color: #85bbd2;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  font-size: 16px;
+/* Media query for smaller screens (tablets and below) */
+@media (max-width: 768px) {
+  .login-form {
+    padding: 20px; /* Reduced padding for smaller screens */
+  }
+
+  .login-form h2 {
+    font-size: 22px;
+  }
+
+  .btn-submit {
+    padding: 10px; /* Reduced button padding */
+    font-size: 14px; /* Reduced button font size */
+  }
+
+  .form-group input {
+    padding: 10px;
+    font-size: 14px; /* Adjusted input size for smaller screens */
+  }
 }
 
-.btn-submit:hover {
-  background-color: #a3c7d7;
-}
+/* Media query for extra small screens (mobile devices) */
+@media (max-width: 480px) {
+  .login-container {
+    padding: 10px; /* Extra padding for smaller devices */
+  }
 
-.error {
-  color: red;
-  margin-bottom: 20px;
-  font-size: 14px;
+  .login-form {
+    padding: 15px; /* Reduced form padding */
+    max-width: 90%; /* Adjust form width to fit smaller screens */
+  }
+
+  .login-form h2 {
+    font-size: 20px; /* Adjust heading font size */
+  }
+
+  .form-group input {
+    font-size: 14px;
+    padding: 8px; /* Adjust input padding */
+  }
+
+  .btn-submit {
+    padding: 8px;
+    font-size: 14px; /* Smaller button size */
+  }
 }

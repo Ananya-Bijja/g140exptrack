@@ -1,8 +1,6 @@
 
-
-
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Home from './components/Home';
 import About from './components/About';
 import Login from './components/Login';
@@ -18,16 +16,31 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInUsername, setLoggedInUsername] = useState('');
 
+  // Load authentication state from localStorage on mount
+  useEffect(() => {
+    const storedIsLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const storedUsername = localStorage.getItem('loggedInUsername');
+
+    if (storedIsLoggedIn && storedUsername) {
+      setIsLoggedIn(true);
+      setLoggedInUsername(storedUsername);
+    }
+  }, []);
+
   // Handle login event and store the username
   const handleLogin = (username) => {
     setIsLoggedIn(true);
     setLoggedInUsername(username);
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('loggedInUsername', username);
   };
 
   // Handle logout event
   const handleLogout = () => {
     setIsLoggedIn(false);
     setLoggedInUsername('');
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('loggedInUsername');
   };
 
   return (
@@ -35,7 +48,7 @@ const App = () => {
       <Routes>
         {/* Home Page */}
         <Route path="/" element={<Home />} />
-        <Route path="/About" element={<About />} />
+        <Route path="/about" element={<About />} />
 
         {/* Login Page */}
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
@@ -50,7 +63,7 @@ const App = () => {
             isLoggedIn ? (
               <AdminDashboard username={loggedInUsername} onLogout={handleLogout} />
             ) : (
-              <Login onLogin={handleLogin} />
+              <Navigate to="/login" replace />
             )
           }
         />
@@ -62,7 +75,7 @@ const App = () => {
             isLoggedIn ? (
               <WordPuzzleGame loggedInUsername={loggedInUsername} />
             ) : (
-              <Login onLogin={handleLogin} />
+              <Navigate to="/login" replace />
             )
           }
         />
@@ -74,7 +87,7 @@ const App = () => {
             isLoggedIn ? (
               <DetailedAnalysis username={loggedInUsername} />
             ) : (
-              <Login onLogin={handleLogin} />
+              <Navigate to="/login" replace />
             )
           }
         />
@@ -86,19 +99,19 @@ const App = () => {
             isLoggedIn ? (
               <DetailedImages username={loggedInUsername} />
             ) : (
-              <Login onLogin={handleLogin} />
+              <Navigate to="/login" replace />
             )
           }
         />
 
-        {/* Analysis Summary (Redirect to Detailed Analysis) */}
+        {/* Analysis Summary */}
         <Route
           path="/analysis-summary"
           element={
             isLoggedIn ? (
               <DetailedAnalysis username={loggedInUsername} />
             ) : (
-              <Login onLogin={handleLogin} />
+              <Navigate to="/login" replace />
             )
           }
         />

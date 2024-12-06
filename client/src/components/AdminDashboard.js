@@ -422,7 +422,12 @@ const AdminDashboard = () => {
   const fetchSessions = async (userId) => {
     try {
       const response = await axios.get(`http://localhost:5000/api/game-sessions/${userId}`);
-      setSessions(prev => ({ ...prev, [userId]: response.data.sessions }));
+      const validSessions = response.data.sessions.filter(session => {
+        // Check if session date is valid
+        const sessionDate = new Date(session.images[0]?.capturedAt);
+        return !isNaN(sessionDate); // Only valid dates will pass
+      });
+      setSessions(prev => ({ ...prev, [userId]: validSessions }));
       setSelectedUser(userId); // Show sessions for this user
     } catch (error) {
       console.error('Error fetching sessions:', error);
@@ -432,10 +437,17 @@ const AdminDashboard = () => {
   const handleViewAnalysis = async (username, sessionId) => {
     try {
       const response = await axios.post(`http://localhost:5000/api/analyze/${sessionId}`, { username });
+      if (response.status === 200) {
       alert(`Analysis complete: ${JSON.stringify(response.data.result)}`);
       navigate(`/detailed-analysis/${username}/${sessionId}`);
-    } catch (error) {
+    }else if (response.status === 400) {
+        alert(`Error: ${response.data.message}`); // Show the error message returned by the backend
+      }
+    }
+    catch (error) {
       console.error('Error analyzing session:', error);
+      alert('An error occurred while analyzing the session. Please try again later.');
+
     }
   };
 

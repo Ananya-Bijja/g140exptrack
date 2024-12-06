@@ -205,8 +205,13 @@ app.post('/api/analyze/:sessionId', async (req, res) => {
       let analysisResults = await Promise.all(session.images.map(async (image) => {
         let imagePath = path.join(uploadDir, image.imageUrl);
         try {
-          let result = await analyzeImage(imagePath);
-          image.emotions = result.emotions; // Store the emotions
+          if (fs.existsSync(imagePath)) {
+            let result = await analyzeImage(imagePath);
+            image.emotions = result.emotions; // Store the emotions
+          } else {
+            console.warn(`Image not found: ${image.imageUrl}`);
+            image.emotions = []; // Store empty emotions if image not found
+          }// Store the emotions
          
           return image;
         } catch (error) {
@@ -224,7 +229,9 @@ app.post('/api/analyze/:sessionId', async (req, res) => {
       session.flag = true;
       await user.save(); // Save changes to the database
     }
-    else{        console.warn('Some images have no emotions detected. Flag not set to true.');
+    else{        
+      console.warn('Some images have no emotions detected. Flag not set to true.');
+      return res.status(500).json({ message: 'Some images have no emotions detected' });
     }
   }
 

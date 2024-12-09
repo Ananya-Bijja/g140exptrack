@@ -1,6 +1,6 @@
-/* Custom styles for the buttons */
+/* Custom styles for the buttons
 .btn-login {
-  background-color: #008CBA;  /* Green color */
+  background-color: #008CBA;  
   color: white;
   padding: 15px 32px;
   font-size: 18px;
@@ -12,11 +12,11 @@
 }
 
 .btn-login:hover {
-  background-color: #008CBA;  /* Slightly darker green on hover */
+  background-color: #008CBA;  
 }
 
 .btn-signup {
-  background-color: #90b6c8;  /* Blue color */
+  background-color: #90b6c8; 
   color: white;
   padding: 15px 32px;
   font-size: 18px;
@@ -28,5 +28,64 @@
 }
 
 .btn-signup:hover {
-  background-color: #007bb5;  /* Slightly darker blue on hover */
+  background-color: #007bb5;  
+} */
+/* General Button Styles */
+.navbar-button {
+  background: #ffffff; /* White background for all buttons */
+  color: #333; /* Dark text */
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: 500;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.navbar-button:hover {
+  background: #007bff; /* Light blue background on hover */
+  color: #ffffff; /* White text on hover */
+  border-color: #007bff; /* Border matches hover background */
+}
+
+/* Feedback button alignment (right side) */
+.feedback-button {
+  margin-left: auto; /* Push Feedback to the right */
+}
+/* .btn-login:hover {
+  background-color: #008CBA;  
+} */
+
+.btn-signup {
+  background-color: #90b6c8; 
+  color: white;
+  padding: 15px 32px;
+  font-size: 18px;
+  border-radius: 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+.btn-login {
+  background-color:  #008CBA; 
+  color: white;
+  padding: 15px 32px;
+  font-size: 18px;
+  border-radius: 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+
+/* Navbar container styling (optional for layout alignment) */
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: #f8f9fa; /* Light gray navbar background */
 }

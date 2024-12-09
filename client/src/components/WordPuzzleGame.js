@@ -24,6 +24,9 @@ function WordPuzzleGame({ loggedInUsername }) {
   const [isWordFound, setIsWordFound] = useState(false);
   const [funFact, setFunFact] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [cameraPermissionGranted, setCameraPermissionGranted] = useState(false); // New state
+  
+  const [cameraErrorMessage, setCameraErrorMessage] = useState('');
   let [audio] = useState(new Audio());  // State for the error message
   let gameContainerRef = useRef(null);
   
@@ -51,11 +54,50 @@ function WordPuzzleGame({ loggedInUsername }) {
     }
   }, [currentPuzzle]);
 
+
   const handleFinishGame = () => {
     setGameFinished(true);
     setIsCameraActive(false);
     setShowConfetti(true);
+    setCameraPermissionGranted(false);  // Reset camera permission on game finish
   };
+  
+/*
+  const handleFinishGame = () => {
+    setGameFinished(true);
+    setIsCameraActive(false);
+    setShowConfetti(true);
+  };*/
+/*
+
+
+  const requestCameraAccess = async () => {
+    try {
+      await navigator.mediaDevices.getUserMedia({ video: true });
+      setCameraPermissionGranted(true);
+      setCameraErrorMessage('');
+    } catch (error) {
+      console.error('Camera access denied:', error);
+      setCameraErrorMessage('Please allow camera access to play the game.');
+    }
+  };
+*/
+const requestCameraAccess = async () => {
+  try {
+    await navigator.mediaDevices.getUserMedia({ video: true });
+    setCameraPermissionGranted(true);  // Set camera permission to granted
+    setCameraErrorMessage('');  // Clear any error messages if permission is granted
+  } catch (error) {
+    console.error('Camera access denied:', error);
+    setCameraErrorMessage('Please allow camera access to play the game.');
+  }
+};
+
+  useEffect(() => {
+    // Request camera access when the component loads
+    setCameraPermissionGranted(false);
+    requestCameraAccess();
+  }, []);
 
   // const speakText = (text) => {
   //   return new Promise((resolve, reject) => {
@@ -114,23 +156,10 @@ function WordPuzzleGame({ loggedInUsername }) {
   useEffect(() => {
     const randomFunFact = funFacts[Math.floor(Math.random() * funFacts.length)];
     setFunFact(randomFunFact);
-  
-    // Create a SpeechSynthesisUtterance with just the fact text (not the entire object)
-    
-  
-    // Optional: Set the voice/accent
-   
-    
-  
-    // Speak the fact
+
     
   }, []);
-  
-  /*const handleCellClick = (index) => {
-    if (selectedLetters.length < 3 && !selectedLetters.includes(index)) {
-      setSelectedLetters([...selectedLetters, index]);
-    }
-  };*/
+
 
   const checkWordFound = useCallback(() => {
     if (gameFinished) return;
@@ -208,16 +237,24 @@ function WordPuzzleGame({ loggedInUsername }) {
 
 
   // Start the game and activate the camera
-
+/*
   const handlePlayNow = () => {
     setCurrentPuzzle(0);
     setIsCameraActive(true);
     setShowConfetti(false);
+  };*/
+  const handlePlayNow = () => {
+    // Reset camera permission and start the game
+    setCameraPermissionGranted(false);
+    setCurrentPuzzle(0);
+    setIsCameraActive(true);
+    setShowConfetti(false);
+    requestCameraAccess();  // Request camera access again when starting the game
   };
-
+  
   let takeGameScreenshot = () => {
     if (gameContainerRef.current) {
-      html2canvas(gameContainerRef.current,{crossOrigin:"anonymous"} ,{allowTaint: true},{ useCORS: true }/*,{ scale: 2 }*/).then((canvas) => {
+      html2canvas(gameContainerRef.current,{crossOrigin:"anonymous"} ,{allowTaint: true},{ useCORS: true }).then((canvas) => {
         canvas.toBlob(
           (blob) => {
             if (blob) {
@@ -343,26 +380,29 @@ return (
     {currentPuzzle === null ? (
       <div id="splashScreen">
         <h1>
-  <span style={{ color: '#4caf50' }}></span>{' '}
-  <i>
-    Hey{' '}
-    <span className="username" style={{ color: '#000' }}>{loggedInUsername}</span>{' '}
-  </i>,{' '}
- Welcome to the Word Puzzle Game 🎉
-</h1>
+          <span style={{ color: '#4caf50' }}></span>{' '}
+          <i>
+           Hey{' '}
+           <span className="username" style={{ color: '#000' }}>{loggedInUsername}</span>{' '}
+           ,{' '}
+           </i>
+            Welcome to the Word Puzzle Game 🎉
+        </h1>
 
         <div id="welcomeContainer">
           {/* Play Now Button */}
           <div id="instructions">
-      <h2>How to Play</h2>
+            <h2>How to Play</h2>
       <ul>
-      <li>Select letters to form a word.</li>
+        <li>Select letters to form a word.</li>
         <li>Find the hidden word in the puzzle grid.</li>
         <li>Earn points for correct answers!</li>
       </ul>
     </div>
+    {cameraPermissionGranted ? (
           <button onClick={handlePlayNow}>Play Now</button>
-
+        ):(<p style={{ color: 'red' }}>{cameraErrorMessage}</p>
+        )}
           {/* Fun fact box below Play Now */}
           <div className="funFactBox">
         
@@ -427,5 +467,3 @@ return (
 
 
 export default WordPuzzleGame;
-
-

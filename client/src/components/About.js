@@ -1,9 +1,12 @@
 
 import React from 'react';
-import '../styles/About.css'; 
+import '../styles/About.css';
+import Navbar from './Navbar'; 
 
 const About = () => {
   return (
+    <>
+      <Navbar />
     <div className="about-container">
       {/* Hero Section */}
       <section className="about-hero">
@@ -43,6 +46,7 @@ const About = () => {
 
       
     </div>
+    </>
   );
 };
 

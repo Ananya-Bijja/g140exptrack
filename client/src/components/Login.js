@@ -26,12 +26,12 @@ const Login = ({ onLogin }) => {
         setErrorMessage('');
         onLogin(username);
 
-        // Check if the username ends with @admin before creating a game session
+       
         if (username.endsWith('@admin')) {
-          console.log('Redirecting to admin dashboard');  // Debugging statement
+          console.log('Redirecting to admin dashboard');  
           navigate('/admin-dashboard');
         } else {
-          // Create a game session if it's not an admin user
+        
           const gameSessionResponse = await fetch('http://localhost:5000/api/create-game-session', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

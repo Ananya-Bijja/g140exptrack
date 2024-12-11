@@ -1,4 +1,3 @@
-// src/data/puzzlesData.js
 
 export const puzzles = [
     {

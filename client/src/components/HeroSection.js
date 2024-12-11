@@ -1,6 +1,5 @@
 import React from 'react';
-import '../styles/HeroSection.css'; // Import the custom CSS file
-
+import '../styles/HeroSection.css';
 const HeroSection = () => {
   return (
     <div className="px-4 pt-5 my-5 text-center border-bottom">

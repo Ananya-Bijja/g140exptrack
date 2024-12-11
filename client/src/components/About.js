@@ -1,21 +1,6 @@
-// import React from "react";
-
-// function About() {
-//   return (
-//     <div>
-//       <h1>About Us</h1>
-//       <p>This is the About page. Information about Learn&Smile will go here.</p>
-//     </div>
-//   );
-// }
-
-// export default About;
-
-
-
 
 import React from 'react';
-import '../styles/About.css'; // Import the CSS file for styling
+import '../styles/About.css'; 
 
 const About = () => {
   return (

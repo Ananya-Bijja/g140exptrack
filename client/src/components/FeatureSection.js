@@ -41,4 +41,3 @@ const FeatureSection = () => {
 };
 
 export default FeatureSection;
-// bs-dark-bg-subtle
